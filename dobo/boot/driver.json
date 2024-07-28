@@ -1,0 +1,12 @@
+{
+  "type": ["better-sqlite3", "cockroachdb", "mssql", "mysql", "mysql2", "oracle",
+    "oracledb", "pgnative", "postgres", "redshift", "sqlite3", "manticore"],
+  "driver": "knex",
+  "idField": {
+    "name": "id",
+    "type": "integer",
+    "required": true,
+    "autoInc": true,
+    "index": { "type": "primary" }
+  }
+}
