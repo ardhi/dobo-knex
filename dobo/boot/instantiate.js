@@ -22,7 +22,7 @@ async function instantiate ({ connection, schemas, noRebuild = true }) {
   const Dialect = extDialect[type] ?? (await import(dialectFile)).default
   let driver
   try {
-    driver = await importPkg(`app:${driverPkg.adapter}`, { thrownNotFound: true })
+    driver = await importPkg(`main:${driverPkg.adapter}`, { thrownNotFound: true })
   } catch (err) {
     throw this.error('Problem with \'%s\' driver file. Not installed yet?', driverPkg.adapter)
   }
