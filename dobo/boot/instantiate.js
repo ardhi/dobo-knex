@@ -10,14 +10,14 @@ const extDialect = {
 }
 
 async function instantiate ({ connection, schemas, noRebuild = true }) {
-  const { importPkg, currentLoc } = this.app.bajo
+  const { importPkg, getPluginFile } = this.app.bajo
   const { fs } = this.app.bajo.lib
   const { merge, pick, find } = this.app.bajo.lib._
   this.instances = this.instances ?? []
   const [, type] = connection.type.split(':')
   const driverPkg = find(this.drivers, { name: type })
   const dialect = driverPkg.dialect ?? type
-  let dialectFile = `${currentLoc(import.meta).dir}/dialect/${dialect}.js`
+  let dialectFile = getPluginFile(`${this.name}:/dobo/boot/dialect/${dialect}.js`)
   if (!fs.existsSync(dialectFile)) dialectFile = `knex/lib/dialects/${dialect}/index.js`
   const client = extDialect[type] ?? (await import(dialectFile)).default
   let driver
