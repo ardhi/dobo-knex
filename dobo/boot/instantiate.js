@@ -19,16 +19,16 @@ async function instantiate ({ connection, schemas, noRebuild = true }) {
   const dialect = driverPkg.dialect ?? type
   let dialectFile = `${currentLoc(import.meta).dir}/dialect/${dialect}.js`
   if (!fs.existsSync(dialectFile)) dialectFile = `knex/lib/dialects/${dialect}/index.js`
-  const Dialect = extDialect[type] ?? (await import(dialectFile)).default
+  const client = extDialect[type] ?? (await import(dialectFile)).default
   let driver
   try {
     driver = await importPkg(`main:${driverPkg.adapter}`, { thrownNotFound: true })
   } catch (err) {
     throw this.error('Problem with \'%s\' driver file. Not installed yet?', driverPkg.adapter)
   }
-  Dialect.prototype._driver = () => driver
+  client.prototype._driver = () => driver
   const instance = pick(connection, ['name', 'type'])
-  const knexLog = {
+  const log = {
     error: this.log.error,
     debug: this.log.debug,
     deprecate: this.log.warn,
@@ -41,7 +41,7 @@ async function instantiate ({ connection, schemas, noRebuild = true }) {
       return this.log.warn(msg)
     }
   }
-  instance.client = knex(merge({}, connection, { log: knexLog, client: Dialect }))
+  instance.client = knex(merge({}, connection, this.config.connOptions, { log, client }))
   this.instances.push(instance)
   const isMem = type === 'sqlite3' && connection.connection.filename === ':memory:'
   if (isMem) noRebuild = false

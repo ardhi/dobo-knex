@@ -1,7 +1,8 @@
+import defErrorHandler from '../error-handler.js'
 import getRecord from './get.js'
 
 async function recordCreate ({ schema, body, options = {} }) {
-  const { isSet, importModule, currentLoc } = this.app.bajo
+  const { isSet, importModule } = this.app.bajo
   const { noResult } = options
   const { getInfo } = this.app.dobo
   const { pick } = this.app.bajo.lib._
@@ -11,9 +12,14 @@ async function recordCreate ({ schema, body, options = {} }) {
     if (['object', 'array'].includes(p.type) && isSet(body[p.name])) body[p.name] = JSON.stringify(body[p.name])
   }
   let result
-  const mod = await importModule(`${currentLoc(import.meta).dir}/../../lib/${driver.type}/record-create.js`)
-  if (mod) result = await mod.call(this, { schema, body, options })
-  else result = await instance.client(schema.modelName).insert(body, ...returning)
+  const mod = await importModule(`${this.name}:/dobo/lib/${driver.type}/record-create.js`)
+  const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
+  try {
+    if (mod) result = await mod.call(this, { schema, body, options })
+    else result = await instance.client(schema.modelName).insert(body, ...returning)
+  } catch (err) {
+    throw errorHandler ? (await errorHandler.call(this, err)) : (await defErrorHandler.call(this, err))
+  }
   if (noResult) return
   if (!driver.returning) {
     const resp = await getRecord.call(this, { schema, id: result[0], options: { thrownNotFound: false } })

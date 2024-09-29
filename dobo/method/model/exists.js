@@ -1,11 +1,18 @@
+import defErrorHandler from '../error-handler.js'
+
 async function modelExists ({ schema, options = {} }) {
-  const { importModule, currentLoc } = this.app.bajo
+  const { importModule } = this.app.bajo
   const { getInfo } = this.app.dobo
   const { instance, driver } = getInfo(schema)
-  const mod = await importModule(`${currentLoc(import.meta).dir}/../../lib/${driver.type}/model-exists.js`)
-  if (mod) return await mod.call(this, schema)
-  const exists = await instance.client.schema.hasTable(schema.modelName)
-  return !!exists
+  const mod = await importModule(`${this.name}:/dobo/lib/${driver.type}/model-exists.js`)
+  const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
+  try {
+    if (mod) return await mod.call(this, schema)
+    const exists = await instance.client.schema.hasTable(schema.modelName)
+    return !!exists
+  } catch (err) {
+    throw errorHandler ? (await errorHandler.call(this, err)) : (await defErrorHandler.call(this, err))
+  }
 }
 
 export default modelExists

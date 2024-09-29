@@ -1,7 +1,8 @@
+import defErrorHandler from '../error-handler.js'
 import getRecord from './get.js'
 
 async function recordUpdate ({ schema, id, body, options }) {
-  const { isSet, importModule, currentLoc } = this.app.bajo
+  const { isSet, importModule } = this.app.bajo
   const { noResult } = options
   const { getInfo } = this.app.dobo
   const { pick } = this.app.bajo.lib._
@@ -12,9 +13,14 @@ async function recordUpdate ({ schema, id, body, options }) {
   }
   const old = await getRecord.call(this, { schema, id })
   let result
-  const mod = await importModule(`${currentLoc(import.meta).dir}/../../lib/${driver.type}/record-update.js`)
-  if (mod) result = await mod.call(this, { schema, id, body, oldBody: old.data, options })
-  else result = await instance.client(schema.modelName).where('id', id).update(body, ...returning)
+  const mod = await importModule(`${this.name}:/dobo/lib/${driver.type}/record-update.js`)
+  const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
+  try {
+    if (mod) result = await mod.call(this, { schema, id, body, oldBody: old.data, options })
+    else result = await instance.client(schema.modelName).where('id', id).update(body, ...returning)
+  } catch (err) {
+    throw errorHandler ? (await errorHandler.call(this, err)) : (await defErrorHandler.call(this, err))
+  }
   if (noResult) return
   if (!driver.returning) {
     const resp = await getRecord.call(this, { schema, id, options: { thrownNotFound: false } })

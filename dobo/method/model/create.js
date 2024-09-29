@@ -1,3 +1,5 @@
+import defErrorHandler from '../error-handler.js'
+
 export async function create (schema, applyTable, applyColumn) {
   const { getInfo } = this.app.dobo
   const { instance } = getInfo(schema)
@@ -48,12 +50,17 @@ export async function create (schema, applyTable, applyColumn) {
 }
 
 async function modelCreate ({ schema, options = {} }) {
-  const { currentLoc, importModule } = this.app.bajo
+  const { importModule } = this.app.bajo
   const { getInfo } = this.app.dobo
   const { driver } = getInfo(schema)
-  const mod = await importModule(`${currentLoc(import.meta).dir}/../../lib/${driver.type}/model-create.js`)
-  if (mod) return await mod.call(this, schema)
-  return await create.call(this, schema)
+  const mod = await importModule(`${this.name}:/dobo/lib/${driver.type}/model-create.js`)
+  const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
+  try {
+    if (mod) return await mod.call(this, schema)
+    return await create.call(this, schema)
+  } catch (err) {
+    throw errorHandler ? (await errorHandler.call(this, err)) : (await defErrorHandler.call(this, err))
+  }
 }
 
 export default modelCreate

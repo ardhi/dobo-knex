@@ -1,5 +1,8 @@
 {
   "alias": "knex",
+  "connOptions": {
+    "compileSqlOnError": false
+  },
   "manticore": {
     "maxMatches": 1000
   },
