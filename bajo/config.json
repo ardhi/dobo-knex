@@ -1,5 +1,4 @@
 {
-  "alias": "knex",
   "connOptions": {
     "compileSqlOnError": false
   },
