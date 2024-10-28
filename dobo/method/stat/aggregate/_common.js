@@ -19,7 +19,7 @@ async function common ({ schema, filter, options = {} }) {
     d = d <= 0 ? 'desc' : 'asc'
     cursor.orderBy(f, d)
   }
-  for (const t of (options.aggregate ?? '').split(',')) {
+  for (const t of options.aggregate) {
     if (!aggregateTypes.includes(t)) throw this.error('Unsupported aggregate: \'%s\'', t)
     cursor[t](field, { as: camelCase(`${field} ${t}`) })
   }

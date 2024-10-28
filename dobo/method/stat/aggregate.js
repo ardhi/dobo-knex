@@ -2,9 +2,14 @@ import defErrorHandler from '../error-handler.js'
 
 async function statAggregate ({ schema, filter = {}, options = {} }) {
   const { importModule, getPluginFile } = this.app.bajo
+  const { isString } = this.app.bajo.lib._
   const { fs } = this.app.bajo.lib
   const { getInfo } = this.app.dobo
   const { driver } = getInfo(schema)
+  options.aggregate = options.aggregate ?? ''
+  if (isString(options.aggregate)) options.aggregate = options.aggregate.split(',')
+  options.fields = options.fields ?? ['*']
+  if (isString(options.fields)) options.fields = options.fields.split(',')
 
   const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
   try {
