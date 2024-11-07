@@ -6,7 +6,7 @@ async function recordCreate ({ schema, body, options } = {}) {
   const { instance, returning } = getInfo(schema)
   const nbody = sanitizeInput.call(this, body, schema)
   if (!isSet(nbody.id)) nbody.id = generateId('int')
-  return await instance.client(schema.modelName).insert(nbody, ...returning)
+  return await instance.client(schema.name).insert(nbody, ...returning)
 }
 
 export default recordCreate

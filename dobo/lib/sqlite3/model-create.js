@@ -14,28 +14,28 @@ async function modelCreate (schema) {
   if (schema.fullText.fields.length > 0) {
     const columns = schema.fullText.fields.join(', ')
     const stmtSchema = `
-      CREATE VIRTUAL TABLE ${schema.modelName}_fts USING fts5 (
-        ${printCols()}, content = '${schema.modelName}', content_rowid = 'id'
+      CREATE VIRTUAL TABLE ${schema.name}_fts USING fts5 (
+        ${printCols()}, content = '${schema.name}', content_rowid = 'id'
       );
     `
     const stmtTriggerInsert = `
-      CREATE TRIGGER ${schema.modelName}_fts_insert AFTER INSERT ON ${schema.modelName}
+      CREATE TRIGGER ${schema.name}_fts_insert AFTER INSERT ON ${schema.name}
       BEGIN
-        INSERT INTO ${schema.modelName}_fts (rowid, ${columns}) VALUES (new.id, ${printCols('new')});
+        INSERT INTO ${schema.name}_fts (rowid, ${columns}) VALUES (new.id, ${printCols('new')});
       END;
     `
     const stmtTriggerDelete = `
-      CREATE TRIGGER ${schema.modelName}_fts_delete AFTER DELETE ON ${schema.modelName}
+      CREATE TRIGGER ${schema.name}_fts_delete AFTER DELETE ON ${schema.name}
       BEGIN
-        INSERT INTO ${schema.modelName}_fts (${schema.modelName}_fts, rowid, ${columns}) VALUES ('delete', old.id, ${printCols('old')});
+        INSERT INTO ${schema.name}_fts (${schema.name}_fts, rowid, ${columns}) VALUES ('delete', old.id, ${printCols('old')});
       END;
     `
 
     const stmtTriggerUpdate = `
-      CREATE TRIGGER ${schema.modelName}_fts_update AFTER UPDATE ON ${schema.modelName}
+      CREATE TRIGGER ${schema.name}_fts_update AFTER UPDATE ON ${schema.name}
       BEGIN
-        INSERT INTO ${schema.modelName}_fts (${schema.modelName}_fts, rowid, ${columns}) VALUES ('delete', old.id, ${printCols('old')});
-        INSERT INTO ${schema.modelName}_fts (rowid, ${columns}) VALUES (new.id, ${printCols('new')});
+        INSERT INTO ${schema.name}_fts (${schema.name}_fts, rowid, ${columns}) VALUES ('delete', old.id, ${printCols('old')});
+        INSERT INTO ${schema.name}_fts (rowid, ${columns}) VALUES (new.id, ${printCols('new')});
       END;
     `
     await instance.client.raw(stmtSchema)

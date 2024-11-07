@@ -5,7 +5,7 @@ async function count ({ schema, filter = {}, options = {} } = {}) {
   const { getInfo } = this.app.dobo
   const { instance } = getInfo(schema)
   const mongoKnex = await importPkg('dobo:@tryghost/mongo-knex')
-  let result = instance.client(schema.modelName)
+  let result = instance.client(schema.name)
   if (filter.query) result = mongoKnex(result, filter.query)
   await applyFulltext.call(this, schema, result, filter.match)
   result = await result.count('*', { as: 'cnt' })

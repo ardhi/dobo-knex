@@ -9,7 +9,7 @@ async function recordFind ({ schema, filter = {}, options = {} } = {}) {
   const { noLimit } = options
   const { limit, skip, sort } = await prepPagination(filter, schema)
 
-  let data = instance.client(schema.modelName)
+  let data = instance.client(schema.name)
   if (filter.query) data = mongoKnex(data, filter.query)
   await applyFulltext.call(this, schema, data, filter.match)
   if (!noLimit) data.limit(limit, { skipBinding: true }).offset(skip)

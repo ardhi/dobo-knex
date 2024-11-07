@@ -13,8 +13,8 @@ async function applyFulltext (schema, data, match) {
 
   if (matchers.length > 0) {
     const stmt = `
-      SELECT rowid FROM ${schema.modelName}_fts
-      WHERE ${schema.modelName}_fts
+      SELECT rowid FROM ${schema.name}_fts
+      WHERE ${schema.name}_fts
       MATCH '${matchers.join(' ')}'
       ORDER BY rank
     `

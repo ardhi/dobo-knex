@@ -12,7 +12,7 @@ async function recordFind ({ schema, filter = {}, options = {} } = {}) {
   const { noLimit } = options
   const { limit, skip, sort } = await prepPagination(filter, schema)
 
-  let data = instance.client(schema.modelName)
+  let data = instance.client(schema.name)
   if (filter.query) data = mongoKnex(data, filter.query)
   await applyFulltext.call(this, data, filter.match)
   if (!noLimit) data.limit(limit, { skipBinding: true }).offset(skip)
@@ -24,7 +24,7 @@ async function recordFind ({ schema, filter = {}, options = {} } = {}) {
     data.orderBy(sorts)
   }
   const item = data.toSQL().toNative()
-  item.sql = item.sql.replaceAll('`' + schema.modelName + '`.', '')
+  item.sql = item.sql.replaceAll('`' + schema.name + '`.', '')
   const maxMatches = get(options, 'req.headers.x-max-matches', cfg.manticore.maxMatches)
   item.sql += ` option max_matches=${maxMatches}`
   for (const i in item.bindings) {

@@ -7,7 +7,7 @@ async function recordUpdate ({ schema, id, body, oldBody, options } = {}) {
 
   const nbody = merge({}, oldBody, sanitizeInput.call(this, body, schema))
   nbody.id = id
-  const item = instance.client(schema.modelName).insert(nbody, ...returning).toSQL().toNative()
+  const item = instance.client(schema.name).insert(nbody, ...returning).toSQL().toNative()
   item.sql = 'replace' + item.sql.slice(6)
   return await instance.client.raw(item.sql, item.bindings)
 }

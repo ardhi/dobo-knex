@@ -17,7 +17,7 @@ async function recordFind ({ schema, filter = {}, options = {} }) {
   try {
     if (mod) result = await mod.call(this, { schema, filter, options })
     else {
-      let data = instance.client(schema.modelName)
+      let data = instance.client(schema.name)
       if (filter.query) data = mongoKnex(data, filter.query)
       if (!options.noLimit) data.limit(limit, { skipBinding: true }).offset(skip)
       if (sort) {

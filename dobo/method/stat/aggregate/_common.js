@@ -9,7 +9,7 @@ async function common ({ schema, filter, options = {} }) {
   if (!group) throw this.error('Field to group aggregate is missing')
   const [field] = options.fields ?? []
   if (!field) throw this.error('Field to calculate aggregate is missing')
-  let cursor = instance.client(schema.modelName)
+  let cursor = instance.client(schema.name)
   if (filter.query) cursor = mongoKnex(cursor, filter.query)
   if (!options.noLimit) cursor.limit(limit, { skipBinding: true }).offset(skip)
   cursor.select(group).groupBy(group)

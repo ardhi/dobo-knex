@@ -11,7 +11,7 @@ async function modelClear ({ schema, options = {} }) {
   const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
   try {
     if (mod) await mod.call(this, { schema, options })
-    else await instance.client(schema.modelName)[method]()
+    else await instance.client(schema.name)[method]()
   } catch (err) {
     throw errorHandler ? (await errorHandler.call(this, err)) : (await defErrorHandler.call(this, err))
   }

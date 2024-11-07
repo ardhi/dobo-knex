@@ -17,7 +17,7 @@ const stype = {
 async function modelCreate (schema) {
   const { getInfo } = this.app.dobo
   const { instance } = getInfo(schema)
-  await instance.client.schema.createTable(schema.modelName, table => {
+  await instance.client.schema.createTable(schema.name, table => {
     for (const p of schema.properties) {
       if (p.name === 'id') continue
       if (schema.fullText.fields.includes(p.name)) table.specificType(p.name, 'string attribute indexed')

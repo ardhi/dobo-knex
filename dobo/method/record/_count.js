@@ -12,7 +12,7 @@ async function count ({ schema, type, filter = {}, options = {} }) {
   try {
     if (mod) result = await mod.call(this, { schema, filter, options })
     else {
-      result = instance.client(schema.modelName)
+      result = instance.client(schema.name)
       if (filter.query) result = mongoKnex(result, filter.query)
       result = await result.count('*', { as: 'cnt' })
       result = result[0].cnt

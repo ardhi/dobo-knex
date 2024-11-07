@@ -9,7 +9,7 @@ async function modelDrop ({ schema, options = {} }) {
   const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
   try {
     if (mod) return await mod.call(this, schema)
-    return await instance.client.schema.dropTable(schema.modelName)
+    return await instance.client.schema.dropTable(schema.name)
   } catch (err) {
     throw errorHandler ? (await errorHandler.call(this, err)) : (await defErrorHandler.call(this, err))
   }

@@ -11,7 +11,7 @@ async function recordGet ({ schema, id, options = {} }) {
   const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
   try {
     if (mod) result = await mod.call(this, { schema, id, options })
-    else result = await instance.client(schema.modelName).where('id', id)
+    else result = await instance.client(schema.name).where('id', id)
   } catch (err) {
     throw errorHandler ? (await errorHandler.call(this, err)) : (await defErrorHandler.call(this, err))
   }

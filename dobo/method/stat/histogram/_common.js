@@ -4,7 +4,7 @@ async function common ({ handler, schema, filter, options = {} }) {
   const { instance } = getInfo(schema)
   const mongoKnex = await importPkg('dobo:@tryghost/mongo-knex')
   const { limit, skip, sort, page } = await prepPagination(filter, schema, { allowSortUnindexed: true })
-  let cursor = instance.client(schema.modelName)
+  let cursor = instance.client(schema.name)
   const [field] = options.fields ?? []
   if (!field) throw this.error('Base field for histogram must be provided')
   const prop = schema.properties.find(p => p.name === field)

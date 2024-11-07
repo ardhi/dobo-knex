@@ -17,7 +17,7 @@ async function recordUpdate ({ schema, id, body, options }) {
   const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
   try {
     if (mod) result = await mod.call(this, { schema, id, body, oldBody: old.data, options })
-    else result = await instance.client(schema.modelName).where('id', id).update(body, ...returning)
+    else result = await instance.client(schema.name).where('id', id).update(body, ...returning)
   } catch (err) {
     throw errorHandler ? (await errorHandler.call(this, err)) : (await defErrorHandler.call(this, err))
   }

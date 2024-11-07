@@ -16,7 +16,7 @@ async function recordCreate ({ schema, body, options = {} }) {
   const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
   try {
     if (mod) result = await mod.call(this, { schema, body, options })
-    else result = await instance.client(schema.modelName).insert(body, ...returning)
+    else result = await instance.client(schema.name).insert(body, ...returning)
   } catch (err) {
     throw errorHandler ? (await errorHandler.call(this, err)) : (await defErrorHandler.call(this, err))
   }

@@ -7,7 +7,7 @@ async function count ({ schema, filter, options = {} }) {
   const { limit, skip, sort, page } = await prepPagination(filter, schema, { allowSortUnindexed: true })
   const fields = options.fields ?? ['*']
   const [field] = fields
-  let cursor = instance.client(schema.modelName)
+  let cursor = instance.client(schema.name)
   if (filter.query) cursor = mongoKnex(cursor, filter.query)
   if (field === '*') {
     const data = await cursor.count(field, { as: 'count' })
