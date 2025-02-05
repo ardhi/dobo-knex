@@ -1,5 +1,5 @@
 import defErrorHandler from '../error-handler.js'
-import getCount from './_count.js'
+import getCount from './count.js'
 
 async function recordFind ({ schema, filter = {}, options = {} }) {
   const { importPkg, importModule } = this.app.bajo
