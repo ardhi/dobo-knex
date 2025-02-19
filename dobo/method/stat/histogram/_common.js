@@ -6,10 +6,10 @@ async function common ({ handler, schema, filter, options = {} }) {
   const { limit, skip, sort, page } = await prepPagination(filter, schema, { allowSortUnindexed: true })
   let cursor = instance.client(schema.name)
   const [field] = options.fields ?? []
-  if (!field) throw this.error('Base field for histogram must be provided')
+  if (!field) throw this.error('baseFieldForHistogramMissing')
   const prop = schema.properties.find(p => p.name === field)
-  if (!prop) throw this.error('Unknown base field for histogram \'%s\'', field)
-  if (!['datetime', 'date'].includes(prop.type)) throw this.error('Field type \'%s@%s\' must be a datetime field', field, schema.name)
+  if (!prop) throw this.error('unknownBaseFieldForHistogram%s', field)
+  if (!['datetime', 'date'].includes(prop.type)) throw this.error('fieldTypeMustBeDatetime%s%s', field, schema.name)
   const aggregate = options.aggregate ?? 'count'
   const group = aggregate === 'count' ? '*' : options.group
   if (filter.query) cursor = mongoKnex(cursor, filter.query)

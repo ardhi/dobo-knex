@@ -1,5 +1,5 @@
 async function common ({ type, schema, filter, options = {} }) {
-  throw this.error('Unsupported aggregate \'%s\'', type)
+  throw this.error('unsupportedAggregate%s', type)
 }
 
 export default common

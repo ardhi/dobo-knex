@@ -5,7 +5,7 @@ async function propSanitizer ({ prop, schema, driver }) {
   const idProp = schema.properties.find(p => p.name === 'id')
   if (!idProp) return
   if (schema.fullText.fields.length > 0 && idProp.type !== 'integer') {
-    this.fatal('Full text index need integer type primary id in \'%s@%s\'', idProp.name, schema.name)
+    this.fatal('fulltextNeedIntegerId%s%s', idProp.name, schema.name)
   }
 }
 

@@ -23,7 +23,7 @@ async function propSanitizer ({ prop, schema, driver }) {
       }
       prop[p] = get(prop, p, get(this.app.dobo.config, `default.property.${prop.type}.${p}`, def[p]))
       if (def.choices && !def.choices.includes(prop[p])) {
-        this.fatal('Unsupported %s \'%s\' for \'%s@%s\'. Allowed choices: %s',
+        this.fatal('unsupportedAllowedChoices%s%s%s%s%s',
           p, prop[p], prop.name, schema.name, join(def.choices))
       }
     })

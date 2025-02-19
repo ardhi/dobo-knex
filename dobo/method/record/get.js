@@ -15,7 +15,7 @@ async function recordGet ({ schema, id, options = {} }) {
   } catch (err) {
     throw errorHandler ? (await errorHandler.call(this, err)) : (await defErrorHandler.call(this, err))
   }
-  if (result.length === 0 && thrownNotFound) throw this.error('Record \'%s@%s\' not found!', id, schema.name, { statusCode: 404 })
+  if (result.length === 0 && thrownNotFound) throw this.error('recordNotFound%s%s', id, schema.name, { statusCode: 404 })
   return { data: result[0] }
 }
 

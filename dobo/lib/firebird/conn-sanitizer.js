@@ -3,11 +3,11 @@ import path from 'path'
 async function connSanitizer (item) {
   const { resolvePath, getPluginDataDir } = this.app.bajo
   const { fs } = this.app.bajo.lib
-  if (!item.connection) this.fatal('\'%s@%s\' key is required', 'connection', item.name, { payload: item })
+  if (!item.connection) this.fatal('keyIsRequired%s%s', 'connection', item.name, { payload: item })
   const { isEmpty, pick } = this.app.bajo.lib._
   const newItem = pick(item, ['name', 'type', 'connection'])
   for (const i of ['database', 'user', 'password']) {
-    if (!item.connection[i]) this.fatal('\'%s@%s\' key is required', i, item.name, { payload: item })
+    if (!item.connection[i]) this.fatal('keyIsRequired%s%s', i, item.name, { payload: item })
   }
   if (!path.isAbsolute(item.connection.database)) {
     let file = resolvePath(`${getPluginDataDir(this.name)}/db/${item.connection.database}`)

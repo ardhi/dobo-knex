@@ -6,9 +6,9 @@ async function common ({ schema, filter, options = {} }) {
   const mongoKnex = await importPkg('dobo:@tryghost/mongo-knex')
   const { limit, skip, sort, page } = await prepPagination(filter, schema, { allowSortUnindexed: true })
   const group = options.group
-  if (!group) throw this.error('Field to group aggregate is missing')
+  if (!group) throw this.error('fieldGroupAggregateMissing')
   const [field] = options.fields ?? []
-  if (!field) throw this.error('Field to calculate aggregate is missing')
+  if (!field) throw this.error('fieldCalcAggregateMissing')
   let cursor = instance.client(schema.name)
   if (filter.query) cursor = mongoKnex(cursor, filter.query)
   if (!options.noLimit) cursor.limit(limit, { skipBinding: true }).offset(skip)
@@ -20,7 +20,7 @@ async function common ({ schema, filter, options = {} }) {
     cursor.orderBy(f, d)
   }
   for (const t of options.aggregate) {
-    if (!aggregateTypes.includes(t)) throw this.error('Unsupported aggregate: \'%s\'', t)
+    if (!aggregateTypes.includes(t)) throw this.error('unsupportedAggregate%s', t)
     cursor[t](field, { as: camelCase(`${field} ${t}`) })
   }
   const data = await cursor

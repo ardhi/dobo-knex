@@ -1,6 +1,6 @@
 {
   "name": "dobo-knex",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Knex/SQL driver for Dobo",
   "main": "index.js",
   "scripts": {

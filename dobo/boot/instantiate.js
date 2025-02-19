@@ -24,7 +24,7 @@ async function instantiate ({ connection, schemas, noRebuild = true }) {
   try {
     driver = await importPkg(`main:${driverPkg.adapter}`, { thrownNotFound: true })
   } catch (err) {
-    throw this.error('Problem with \'%s\' driver file. Not installed yet?', driverPkg.adapter)
+    throw this.error('driverNotInstalled%s', driverPkg.adapter)
   }
   client.prototype._driver = () => driver
   const instance = pick(connection, ['name', 'type'])
@@ -51,9 +51,9 @@ async function instantiate ({ connection, schemas, noRebuild = true }) {
     if (!exists) {
       try {
         await modelCreate.call(this, schema)
-        this.log.trace('Model \'%s@%s\' successfully built on the fly', schema.name, connection.name)
+        this.log.trace('modelBuiltOnthefly%s%s%s', schema.name, connection.name)
       } catch (err) {
-        this.fatal('Unable to build modelection \'%s@%s\': %s', schema.name, connection.name, err.message)
+        this.fatal('unableBuildModel%s%s%s', schema.name, connection.name, err.message)
       }
     }
   }
