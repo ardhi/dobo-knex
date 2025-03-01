@@ -22,7 +22,8 @@ async function recordCreate ({ schema, body, options = {} }) {
   }
   if (noResult) return
   if (!driver.returning) {
-    const resp = await getRecord.call(this, { schema, id: result[0], options: { thrownNotFound: false } })
+    const id = body.id ?? result[0]
+    const resp = await getRecord.call(this, { schema, id, options: { thrownNotFound: false } })
     if (returning[0].length > 0) resp.data = pick(resp.data, returning[0])
     result = [resp.data]
   }
