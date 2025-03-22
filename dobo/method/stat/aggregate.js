@@ -2,8 +2,8 @@ import defErrorHandler from '../error-handler.js'
 
 async function statAggregate ({ schema, filter = {}, options = {} }) {
   const { importModule, getPluginFile } = this.app.bajo
-  const { isString } = this.app.bajo.lib._
-  const { fs } = this.app.bajo.lib
+  const { isString } = this.lib._
+  const { fs } = this.lib
   const { getInfo } = this.app.dobo
   const { driver } = getInfo(schema)
   options.aggregate = options.aggregate ?? ''

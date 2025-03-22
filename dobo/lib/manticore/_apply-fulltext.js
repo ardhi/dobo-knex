@@ -1,5 +1,5 @@
 async function applyFulltext (data, match) {
-  const { forOwn, isEmpty } = this.app.bajo.lib._
+  const { forOwn, isEmpty } = this.lib._
   const matches = []
   forOwn(match, (v, k) => {
     if (!isEmpty(v)) matches.push(`@${k} ${v.join(' ')}`)

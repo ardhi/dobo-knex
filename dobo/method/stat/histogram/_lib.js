@@ -1,6 +1,6 @@
 function lib ({ schema, aggregate, group }) {
   const { isSet } = this.app.bajo
-  const { camelCase } = this.app.bajo.lib._
+  const { camelCase } = this.lib._
   const { aggregateTypes } = this.app.dobo
   if (aggregate === 'count') return ['count(*) as count']
   if (!isSet(group)) throw this.error('groupFieldToAggregateMissing')

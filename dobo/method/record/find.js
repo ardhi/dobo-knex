@@ -4,7 +4,7 @@ import getCount from './count.js'
 async function recordFind ({ schema, filter = {}, options = {} }) {
   const { importPkg, importModule } = this.app.bajo
   const { prepPagination, getInfo } = this.app.dobo
-  const { forOwn, omit } = this.app.bajo.lib._
+  const { forOwn, omit } = this.lib._
   const mongoKnex = await importPkg('dobo:@tryghost/mongo-knex')
   const { instance, driver } = getInfo(schema)
   const { limit, skip, sort, page } = await prepPagination(filter, schema)

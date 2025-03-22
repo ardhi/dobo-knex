@@ -2,7 +2,7 @@ import defErrorHandler from '../error-handler.js'
 
 async function statHistogram ({ schema, filter = {}, options = {} }) {
   const { importModule, getPluginFile } = this.app.bajo
-  const { fs } = this.app.bajo.lib
+  const { fs } = this.lib
   const { getInfo } = this.app.dobo
   const { driver } = getInfo(schema)
   const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)

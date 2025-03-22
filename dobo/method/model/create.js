@@ -3,7 +3,7 @@ import defErrorHandler from '../error-handler.js'
 export async function create (schema, applyTable, applyColumn) {
   const { getInfo } = this.app.dobo
   const { instance } = getInfo(schema)
-  const { has, omit, cloneDeep, isEmpty } = this.app.bajo.lib._
+  const { has, omit, cloneDeep, isEmpty } = this.lib._
   await instance.client.schema.createTable(schema.name, table => {
     for (let p of schema.properties) {
       p = cloneDeep(p)

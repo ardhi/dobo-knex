@@ -5,7 +5,7 @@ async function recordUpdate ({ schema, id, body, options }) {
   const { isSet, importModule } = this.app.bajo
   const { noResult } = options
   const { getInfo } = this.app.dobo
-  const { pick } = this.app.bajo.lib._
+  const { pick } = this.lib._
   const { instance, returning, driver } = getInfo(schema)
 
   for (const p of schema.properties) {

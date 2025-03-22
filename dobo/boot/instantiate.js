@@ -11,8 +11,8 @@ const extDialect = {
 
 async function instantiate ({ connection, schemas, noRebuild = true }) {
   const { importPkg, getPluginFile } = this.app.bajo
-  const { fs } = this.app.bajo.lib
-  const { merge, pick, find } = this.app.bajo.lib._
+  const { fs } = this.lib
+  const { merge, pick, find } = this.lib._
   this.instances = this.instances ?? []
   const [, type] = connection.type.split(':')
   const driverPkg = find(this.drivers, { name: type })
