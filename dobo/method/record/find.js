@@ -8,7 +8,6 @@ async function recordFind ({ schema, filter = {}, options = {} }) {
   const mongoKnex = await importPkg('dobo:@tryghost/mongo-knex')
   const { instance, driver } = getInfo(schema)
   const { limit, skip, sort, page } = await prepPagination(filter, schema)
-
   let count = 0
   if (options.count && !options.dataOnly) count = (await getCount.call(this, { schema, filter, options }) || {}).data
   let result
