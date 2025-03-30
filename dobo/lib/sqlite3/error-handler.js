@@ -3,6 +3,7 @@ async function errorHandler (err) {
   switch (err.code) {
     case 'SQLITE_CONSTRAINT': e = this.error('dbConstrainError'); break
   }
+  e.rawError = err
   return e
 }
 
