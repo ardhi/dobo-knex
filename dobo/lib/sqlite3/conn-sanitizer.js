@@ -9,11 +9,19 @@ async function connSanitizer (item) {
   if (!item.connection.filename) this.fatal('keyIsRequired%s%s', 'filename', item.name, { payload: item })
   const isMem = item.connection.filename === ':memory:'
   const isAbs = path.isAbsolute(item.connection.filename)
-  const isUp = item.connection.filename.startsWith('../')
-  if (!(isMem || isAbs || isUp)) {
+  const isUp = item.connection.filename.startsWith('..')
+  const isAppDir = item.connection.filename.split('/')[0] === 'APPDIR'
+  if (!(isMem || isAbs || isUp || isAppDir)) {
     let file = `${getPluginDataDir('dobo')}/db/${item.connection.filename}`
     const ext = path.extname(file)
     if (isEmpty(ext)) file += '.sqlite3'
+    fs.ensureDirSync(path.dirname(file))
+    newItem.connection.filename = file
+  }
+  if (isAppDir) {
+    const parts = item.connection.filename.split('/')
+    parts.shift()
+    const file = `${this.app.dir}/${parts.join('/')}`
     fs.ensureDirSync(path.dirname(file))
     newItem.connection.filename = file
   }
