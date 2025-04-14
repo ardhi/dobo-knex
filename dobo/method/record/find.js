@@ -31,7 +31,7 @@ async function recordFind ({ schema, filter = {}, options = {} }) {
   } catch (err) {
     throw errorHandler ? (await errorHandler.call(this, err)) : (await defErrorHandler.call(this, err))
   }
-  result = { data: result, page, limit, count, pages: Math.ceil(count / limit) }
+  result = { data: result, page, limit, count, pages: Math.ceil(count / limit), filter: { sort, query: filter.query } }
   if (!options.count) result = omit(result, ['count', 'pages'])
   return result
 }
