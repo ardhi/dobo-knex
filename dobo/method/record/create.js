@@ -2,7 +2,8 @@ import defErrorHandler from '../error-handler.js'
 import getRecord from './get.js'
 
 async function recordCreate ({ schema, body, options = {} }) {
-  const { isSet, importModule } = this.app.bajo
+  const { isSet } = this.lib.aneka
+  const { importModule } = this.app.bajo
   const { noResult } = options
   const { getInfo } = this.app.dobo
   const { pick } = this.lib._
