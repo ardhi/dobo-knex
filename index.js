@@ -5,6 +5,7 @@ async function factory (pkgName) {
     constructor () {
       super(pkgName, me.app)
       this.alias = 'dbknex'
+      this.dependencies = ['dobo']
       this.config = {
         connOptions: {
           compileSqlOnError: false
