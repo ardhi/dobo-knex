@@ -74,7 +74,7 @@ async function factory (pkgName) {
           name: 'manticore',
           dialect: 'mysql',
           adapter: 'mysql',
-          lowerCaseColl: true,
+          lowerCaseModel: true,
           returning: false
         }
       ]
