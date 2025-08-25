@@ -1,11 +1,12 @@
 async function factory (pkgName) {
   const me = this
 
-  return class DoboKnex extends this.lib.Plugin {
+  class DoboKnex extends this.lib.Plugin {
+    static alias = 'dbknex'
+    static dependencies = ['dobo']
+
     constructor () {
       super(pkgName, me.app)
-      this.alias = 'dbknex'
-      this.dependencies = ['dobo']
       this.config = {
         connOptions: {
           compileSqlOnError: false
@@ -80,6 +81,7 @@ async function factory (pkgName) {
       ]
     }
   }
+  return DoboKnex
 }
 
 export default factory
