@@ -2,9 +2,9 @@ import path from 'path'
 
 async function connSanitizer (item) {
   const { resolvePath, getPluginDataDir } = this.app.bajo
-  const { fs } = this.lib
+  const { fs } = this.app.lib
   if (!item.connection) this.fatal('keyIsRequired%s%s', 'connection', item.name, { payload: item })
-  const { isEmpty, pick } = this.lib._
+  const { isEmpty, pick } = this.app.lib._
   const newItem = pick(item, ['name', 'type', 'connection'])
   for (const i of ['database', 'user', 'password']) {
     if (!item.connection[i]) this.fatal('keyIsRequired%s%s', i, item.name, { payload: item })

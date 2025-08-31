@@ -3,7 +3,7 @@ import applyFulltext from './_apply-fulltext.js'
 async function recordFind ({ schema, filter = {}, options = {} } = {}) {
   const { importPkg } = this.app.bajo
   const { prepPagination, getInfo } = this.app.dobo
-  const { forOwn } = this.lib._
+  const { forOwn } = this.app.lib._
   const mongoKnex = await importPkg('dobo:@tryghost/mongo-knex')
   const { instance } = getInfo(schema)
   const { noLimit } = options

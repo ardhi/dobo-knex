@@ -2,7 +2,7 @@ import sanitizeInput from './_sanitize-input.js'
 
 async function recordUpdate ({ schema, id, body, oldBody, options } = {}) {
   const { getInfo } = this.app.dobo
-  const { merge } = this.lib._
+  const { merge } = this.app.lib._
   const { instance, returning } = getInfo(schema)
 
   const nbody = merge({}, oldBody, sanitizeInput.call(this, body, schema))

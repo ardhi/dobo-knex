@@ -1,7 +1,8 @@
 async function common ({ schema, filter, options = {} }) {
   const { importPkg } = this.app.bajo
-  const { camelCase } = this.lib._
-  const { getInfo, prepPagination, aggregateTypes } = this.app.dobo
+  const { camelCase } = this.app.lib._
+  const { aggregateTypes } = this.app.pluginClass.dobo
+  const { getInfo, prepPagination } = this.app.dobo
   const { instance } = getInfo(schema)
   const mongoKnex = await importPkg('dobo:@tryghost/mongo-knex')
   const { limit, skip, sort, page } = await prepPagination(filter, schema, { allowSortUnindexed: true })

@@ -1,7 +1,7 @@
 import sanitizeInput from './_sanitize-input.js'
 
 async function recordCreate ({ schema, body, options } = {}) {
-  const { isSet } = this.lib.aneka
+  const { isSet } = this.app.lib.aneka
   const { generateId } = this.app.bajo
   const { getInfo } = this.app.dobo
   const { instance, returning } = getInfo(schema)

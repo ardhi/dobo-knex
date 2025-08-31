@@ -1,5 +1,5 @@
 function sanitizeOutput (body, schema) {
-  const { dayjs } = this.lib
+  const { dayjs } = this.app.lib
   const nbody = {}
   for (const k in body) {
     const v = body[k]

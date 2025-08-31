@@ -1,5 +1,5 @@
 async function applyFulltext (schema, data, match) {
-  const { isEmpty } = this.lib._
+  const { isEmpty } = this.app.lib._
   const matchers = []
   if (!isEmpty(match['*'])) {
     matchers.push(match['*'])

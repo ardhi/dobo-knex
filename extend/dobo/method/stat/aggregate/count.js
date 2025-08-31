@@ -1,6 +1,6 @@
 async function count ({ schema, filter, options = {} }) {
   const { importPkg } = this.app.bajo
-  const { camelCase } = this.lib._
+  const { camelCase } = this.app.lib._
   const { getInfo, prepPagination } = this.app.dobo
   const { instance } = getInfo(schema)
   const mongoKnex = await importPkg('dobo:@tryghost/mongo-knex')
