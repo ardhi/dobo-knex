@@ -7,8 +7,8 @@ async function recordGet ({ schema, id, options = {} }) {
   const { thrownNotFound = true } = options
 
   let result
-  const mod = await importModule(`${this.name}:/dobo/lib/${driver.type}/record-get.js`)
-  const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
+  const mod = await importModule(`${this.ns}:/dobo/lib/${driver.type}/record-get.js`)
+  const errorHandler = await importModule(`${this.ns}:/dobo/lib/${driver.type}/error-handler.js`)
   try {
     if (mod) result = await mod.call(this, { schema, id, options })
     else result = await instance.client(schema.name).where('id', id)

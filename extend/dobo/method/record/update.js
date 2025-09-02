@@ -14,8 +14,8 @@ async function recordUpdate ({ schema, id, body, options }) {
   }
   const old = await getRecord.call(this, { schema, id })
   let result
-  const mod = await importModule(`${this.name}:/dobo/lib/${driver.type}/record-update.js`)
-  const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
+  const mod = await importModule(`${this.ns}:/dobo/lib/${driver.type}/record-update.js`)
+  const errorHandler = await importModule(`${this.ns}:/dobo/lib/${driver.type}/error-handler.js`)
   try {
     if (mod) result = await mod.call(this, { schema, id, body, oldBody: old.data, options })
     else result = await instance.client(schema.name).where('id', id).update(body, ...returning)

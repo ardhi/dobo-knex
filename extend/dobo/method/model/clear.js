@@ -7,8 +7,8 @@ async function modelClear ({ schema, options = {} }) {
   const { instance, driver } = getInfo(schema)
 
   const method = truncate ? 'truncate' : 'del'
-  const mod = await importModule(`${this.name}:/dobo/lib/${driver.type}/model-clear.js`)
-  const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
+  const mod = await importModule(`${this.ns}:/dobo/lib/${driver.type}/model-clear.js`)
+  const errorHandler = await importModule(`${this.ns}:/dobo/lib/${driver.type}/error-handler.js`)
   try {
     if (mod) await mod.call(this, { schema, options })
     else await instance.client(schema.name)[method]()

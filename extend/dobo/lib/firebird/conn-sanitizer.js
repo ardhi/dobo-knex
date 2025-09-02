@@ -10,7 +10,7 @@ async function connSanitizer (item) {
     if (!item.connection[i]) this.fatal('keyIsRequired%s%s', i, item.name, { payload: item })
   }
   if (!path.isAbsolute(item.connection.database)) {
-    let file = resolvePath(`${getPluginDataDir(this.name)}/db/${item.connection.database}`)
+    let file = resolvePath(`${getPluginDataDir(this.ns)}/db/${item.connection.database}`)
     const ext = path.extname(file)
     if (isEmpty(ext)) file += '.fdb'
     fs.ensureDirSync(path.dirname(file))

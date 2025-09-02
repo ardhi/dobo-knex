@@ -11,12 +11,12 @@ async function statAggregate ({ schema, filter = {}, options = {} }) {
   options.fields = options.fields ?? ['*']
   if (isString(options.fields)) options.fields = options.fields.split(',')
 
-  const errorHandler = await importModule(`${this.name}:/extend/dobo/lib/${driver.type}/error-handler.js`)
+  const errorHandler = await importModule(`${this.ns}:/extend/dobo/lib/${driver.type}/error-handler.js`)
   try {
-    let file = getPluginFile(`${this.name}:/extend/dobo/lib/${driver.type}/stat-aggregate-${options.aggregate}.js`)
-    if (!fs.existsSync(file)) file = getPluginFile(`${this.name}:/extend/dobo/lib/${driver.aggregate}/_stat-aggregate-common.js`)
-    if (!fs.existsSync(file)) file = getPluginFile(`${this.name}:/extend/dobo/method/stat/aggregate/${options.aggregate}.js`)
-    if (!fs.existsSync(file)) file = getPluginFile(`${this.name}:/extend/dobo/method/stat/aggregate/_common.js`)
+    let file = getPluginFile(`${this.ns}:/extend/dobo/lib/${driver.type}/stat-aggregate-${options.aggregate}.js`)
+    if (!fs.existsSync(file)) file = getPluginFile(`${this.ns}:/extend/dobo/lib/${driver.aggregate}/_stat-aggregate-common.js`)
+    if (!fs.existsSync(file)) file = getPluginFile(`${this.ns}:/extend/dobo/method/stat/aggregate/${options.aggregate}.js`)
+    if (!fs.existsSync(file)) file = getPluginFile(`${this.ns}:/extend/dobo/method/stat/aggregate/_common.js`)
     const mod = await importModule(file)
     return await mod.call(this, { schema, filter, options })
   } catch (err) {

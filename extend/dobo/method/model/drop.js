@@ -5,8 +5,8 @@ async function modelDrop ({ schema, options = {} }) {
   const { getInfo } = this.app.dobo
   const { instance, driver } = getInfo(schema)
 
-  const mod = await importModule(`${this.name}:/dobo/lib/${driver.type}/model-drop.js`)
-  const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
+  const mod = await importModule(`${this.ns}:/dobo/lib/${driver.type}/model-drop.js`)
+  const errorHandler = await importModule(`${this.ns}:/dobo/lib/${driver.type}/error-handler.js`)
   try {
     if (mod) return await mod.call(this, schema)
     return await instance.client.schema.dropTable(schema.name)

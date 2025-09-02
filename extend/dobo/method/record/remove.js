@@ -7,8 +7,8 @@ async function recordRemove ({ schema, id, options = {} }) {
   const { getInfo } = this.app.dobo
   const { instance, driver } = getInfo(schema)
 
-  const mod = await importModule(`${this.name}:/dobo/lib/${driver.type}/record-remove.js`)
-  const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
+  const mod = await importModule(`${this.ns}:/dobo/lib/${driver.type}/record-remove.js`)
+  const errorHandler = await importModule(`${this.ns}:/dobo/lib/${driver.type}/error-handler.js`)
   let old
   if (!noResult) old = await getRecord.call(this, { schema, id })
   try {

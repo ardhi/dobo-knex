@@ -17,7 +17,7 @@ async function instantiate ({ connection, schemas, noRebuild = true }) {
   const [, type] = connection.type.split(':')
   const driverPkg = find(this.drivers, { name: type })
   const dialect = driverPkg.dialect ?? type
-  let dialectFile = getPluginFile(`${this.name}:/extend/dobo/boot/dialect/${dialect}.js`)
+  let dialectFile = getPluginFile(`${this.ns}:/extend/dobo/boot/dialect/${dialect}.js`)
   if (!fs.existsSync(dialectFile)) dialectFile = `knex/lib/dialects/${dialect}/index.js`
   const client = extDialect[type] ?? (await import(dialectFile)).default
   let driver

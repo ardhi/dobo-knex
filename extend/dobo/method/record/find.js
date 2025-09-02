@@ -11,8 +11,8 @@ async function recordFind ({ schema, filter = {}, options = {} }) {
   let count = 0
   if (options.count && !options.dataOnly) count = (await getCount.call(this, { schema, filter, options }) || {}).data
   let result
-  const mod = await importModule(`${this.name}:/dobo/lib/${driver.type}/record-find.js`)
-  const errorHandler = await importModule(`${this.name}:/dobo/lib/${driver.type}/error-handler.js`)
+  const mod = await importModule(`${this.ns}:/dobo/lib/${driver.type}/record-find.js`)
+  const errorHandler = await importModule(`${this.ns}:/dobo/lib/${driver.type}/error-handler.js`)
   try {
     if (mod) result = await mod.call(this, { schema, filter, options })
     else {
