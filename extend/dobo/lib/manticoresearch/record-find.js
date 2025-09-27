@@ -25,7 +25,7 @@ async function recordFind ({ schema, filter = {}, options = {} } = {}) {
   }
   const item = data.toSQL().toNative()
   item.sql = item.sql.replaceAll('`' + schema.name + '`.', '')
-  const maxMatches = get(options, 'req.headers.x-max-matches', cfg.manticore.maxMatches)
+  const maxMatches = get(options, 'req.headers.x-max-matches', cfg.manticoresearch.maxMatches)
   item.sql += ` option max_matches=${maxMatches}`
   for (const i in item.bindings) {
     const val = item.bindings[i]

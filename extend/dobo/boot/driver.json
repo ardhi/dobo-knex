@@ -1,6 +1,6 @@
 {
-  "type": ["better-sqlite3", "cockroachdb", "mssql", "mysql", "mysql2", "oracle",
-    "oracledb", "pgnative", "postgres", "redshift", "sqlite3", "manticore"],
+  "type": ["better-sqlite3", "cockcroachdb", "mssql", "mysql", "mysql2", "oracle",
+    "oracledb", "pg-native", "postgres", "redshift", "sqlite3", "manticoresearch"],
   "driver": "knex",
   "idField": {
     "name": "id",

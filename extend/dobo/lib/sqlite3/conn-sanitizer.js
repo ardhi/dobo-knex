@@ -7,24 +7,18 @@ async function connSanitizer (item) {
   const { isEmpty, pick } = this.app.lib._
   const newItem = pick(item, ['name', 'type', 'connection'])
   if (!item.connection.filename) this.fatal('keyIsRequired%s%s', 'filename', item.name, { payload: item })
-  const isMem = item.connection.filename === ':memory:'
-  const isAbs = path.isAbsolute(item.connection.filename)
-  const isUp = item.connection.filename.startsWith('..')
-  const isAppDir = item.connection.filename.split('/')[0] === 'APPDIR'
-  if (!(isMem || isAbs || isUp || isAppDir)) {
-    let file = `${getPluginDataDir('dobo')}/db/${item.connection.filename}`
+  let file = item.connection.filename
+  if (file.indexOf('/') === -1) {
+    file = `${getPluginDataDir('dobo')}/db/${file}`
     const ext = path.extname(file)
     if (isEmpty(ext)) file += '.sqlite3'
     fs.ensureDirSync(path.dirname(file))
-    newItem.connection.filename = file
+  } else {
+    if (file.indexOf('{app-dir}') > -1) file = file.replace('{app-dir}', this.app.dir)
+    if (file.indexOf('{data-dir}') > -1) file = file.replace('{data-dir}', this.app.bajo.dir.data)
+    if (file.indexOf('{tmp-dir}') > -1) file = file.replace('{tmp-dir}', this.app.bajo.dir.tmp)
   }
-  if (isAppDir) {
-    const parts = item.connection.filename.split('/')
-    parts.shift()
-    const file = `${this.app.dir}/${parts.join('/')}`
-    fs.ensureDirSync(path.dirname(file))
-    newItem.connection.filename = file
-  }
+  newItem.connection.filename = file
   newItem.useNullAsDefault = true
   newItem.memory = item.connection.filename === ':memory:'
   return newItem

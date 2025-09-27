@@ -11,7 +11,7 @@ async function factory (pkgName) {
         connOptions: {
           compileSqlOnError: false
         },
-        manticore: {
+        manticoresearch: {
           maxMatches: 1000
         }
       }
@@ -72,7 +72,7 @@ async function factory (pkgName) {
           returning: true
         },
         {
-          name: 'manticore',
+          name: 'manticoresearch',
           dialect: 'mysql',
           adapter: 'mysql',
           lowerCaseModel: true,
