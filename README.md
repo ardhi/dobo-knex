@@ -2,7 +2,7 @@
 
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/ardhi/dobo-knex) ![NPM Version](https://img.shields.io/npm/v/dobo-knex)
 
-> <br />**Attention**: I do NOT accept any pull request at the moment, thanks! ([Why?](CONTRIBUTING.md))<br /><br />
+> <br />**Attention**: I do NOT accept any pull request at the moment, thanks! ([Why?](wiki/CONTRIBUTING.md))<br /><br />
 
 Knexjs driver for [Dobo](https://github.com/ardhi/dobo)
 
@@ -18,9 +18,10 @@ Next, open the file located at ```{data-dir}/config/.plugins``` and add ```dobo`
 
 ## Documentations
 
-- [Config Object](tutorial/00-config.md)
+- [Config Object](wiki/CONFIG.md)
+- [Supported Drivers](wiki/SUPPORTED-DRIVERS.md)
 - [API](https://ardhi.github.io/dobo-knex)
-- [Contributing](CONTRIBUTING.md)
+- [Contributing](wiki/CONTRIBUTING.md)
 
 ## Hire Me
 
