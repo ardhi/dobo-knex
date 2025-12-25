@@ -18,7 +18,7 @@ In addition to those listed above, Dobo Knex also supports the following databas
   ```bash
   $ npm install mysql dobo dobo-knex
   ```
-- ```{data-dir}/config/.plugins``` file:
+- ```{dataDir}/config/.plugins``` file:
 
   ```txt
   ...
@@ -26,7 +26,7 @@ In addition to those listed above, Dobo Knex also supports the following databas
   dobo-knex
   ...
   ```
-- ```{data-dir}/config/dobo.json``` file:
+- ```{dataDir}/config/dobo.json``` file:
 
   ```json
   {
@@ -50,7 +50,7 @@ In addition to those listed above, Dobo Knex also supports the following databas
   ```bash
   $ npm install sqlite3 dobo dobo-knex
   ```
-- ```{data-dir}/config/.plugins``` file:
+- ```{dataDir}/config/.plugins``` file:
 
   ```txt
   ...
@@ -58,7 +58,7 @@ In addition to those listed above, Dobo Knex also supports the following databas
   dobo-knex
   ...
   ```
-- ```{data-dir}/config/dobo.json``` file:
+- ```{dataDir}/config/dobo.json``` file:
 
   ```json
   {

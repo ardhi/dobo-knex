@@ -1,7 +1,7 @@
 async function propSanitizer ({ prop, schema, driver }) {
   const { join } = this.app.bajo
   const { has, get, each } = this.app.lib._
-  const { propType } = this.app.pluginClass.dobo
+  const { propType } = this.app.baseClass.Dobo
   const def = propType[prop.type]
   if (prop.name === 'id') {
     prop.type = 'integer'

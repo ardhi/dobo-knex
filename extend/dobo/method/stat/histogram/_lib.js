@@ -1,7 +1,7 @@
 function lib ({ schema, aggregate, group }) {
   const { isSet } = this.app.lib.aneka
   const { camelCase } = this.app.lib._
-  const { aggregateTypes } = this.app.pluginClass.dobo
+  const { aggregateTypes } = this.app.baseClass.Dobo
   if (aggregate === 'count') return ['count(*) as count']
   if (!isSet(group)) throw this.error('groupFieldToAggregateMissing')
   const prop = schema.properties.find(p => p.name === group)

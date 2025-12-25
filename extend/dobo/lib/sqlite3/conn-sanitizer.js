@@ -14,8 +14,8 @@ async function connSanitizer (item) {
     if (isEmpty(ext)) file += '.sqlite3'
     fs.ensureDirSync(path.dirname(file))
   } else {
-    if (file.indexOf('{app-dir}') > -1) file = file.replace('{app-dir}', this.app.dir)
-    if (file.indexOf('{data-dir}') > -1) file = file.replace('{data-dir}', this.app.bajo.dir.data)
+    if (file.indexOf('{appDir}') > -1) file = file.replace('{appDir}', this.app.dir)
+    if (file.indexOf('{dataDir}') > -1) file = file.replace('{dataDir}', this.app.bajo.dir.data)
     if (file.indexOf('{tmp-dir}') > -1) file = file.replace('{tmp-dir}', this.app.bajo.dir.tmp)
   }
   newItem.connection.filename = file

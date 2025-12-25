@@ -11,7 +11,7 @@
 
 ## Driver Specific Connection
 
-These driver specific connection objects should be used as your **Dobo connection** object's array written in your ```{data-dir}/config/dobo.json```, NOT in ```{data-dir}/config/doboKnex.json```.
+These driver specific connection objects should be used as your **Dobo connection** object's array written in your ```{dataDir}/config/dobo.json```, NOT in ```{dataDir}/config/doboKnex.json```.
 
 See Dobo's Config Object for more info on this topic.
 
@@ -40,13 +40,13 @@ See Dobo's Config Object for more info on this topic.
 | &nbsp;&nbsp;&nbsp;&nbsp;```filename``` | ```string``` || Path to database file |
 | ```...``` ||| See knex options |
 
-Directory to database file, if not specifed, defaults to ```{data-dir}/plugins/dobo/db/{filename}```
+Directory to database file, if not specifed, defaults to ```{dataDir}/plugins/dobo/db/{filename}```
 
 if ```{filename}``` is ```:memory:```, it turns on SQLite3 memory database
 
 Directory tokens are supported, it will be replaced by its respected values if any are found:
-- ```{app-dir}```
-- ```{data-dir}```
+- ```{appDir}```
+- ```{dataDir}```
 - ```{tmp-dir}```
 
 ### Driver Types

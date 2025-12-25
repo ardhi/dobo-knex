@@ -8,13 +8,13 @@ Knexjs driver for [Dobo](https://github.com/ardhi/dobo)
 
 ## Installation
 
-First, go to your ```{app-dir}``` and run the following command in your terminal:
+First, go to your ```{appDir}``` and run the following command in your terminal:
 
 ```bash
 $ npm install dobo dobo-knex
 ```
 
-Next, open the file located at ```{data-dir}/config/.plugins``` and add ```dobo``` and ```dobo-knex```
+Next, open the file located at ```{dataDir}/config/.plugins``` and add ```dobo``` and ```dobo-knex```
 
 ## Documentations
 

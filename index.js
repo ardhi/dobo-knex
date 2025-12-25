@@ -1,3 +1,5 @@
+import knexDriverFactory from './lib/knex-driver-factory.js'
+
 /**
  * Plugin factory
  *
@@ -7,12 +9,14 @@
 async function factory (pkgName) {
   const me = this
 
+  const KnexDriver = await knexDriverFactory.call(this)
+
   /**
    * DoboKnex class
    *
    * @class
    */
-  class DoboKnex extends this.app.pluginClass.base {
+  class DoboKnex extends this.app.baseClass.Base {
     static alias = 'dbknex'
     static dependencies = ['dobo']
 
@@ -26,6 +30,7 @@ async function factory (pkgName) {
           maxMatches: 1000
         }
       }
+      this.baseClass = { KnexDriver }
       this.drivers = [
         {
           name: 'better-sqlite3',
