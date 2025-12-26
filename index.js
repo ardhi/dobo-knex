@@ -22,15 +22,9 @@ async function factory (pkgName) {
 
     constructor () {
       super(pkgName, me.app)
-      this.config = {
-        connOptions: {
-          compileSqlOnError: false
-        },
-        manticoresearch: {
-          maxMatches: 1000
-        }
-      }
+      this.config = {}
       this.baseClass = { KnexDriver }
+      /*
       this.drivers = [
         {
           name: 'better-sqlite3',
@@ -95,6 +89,7 @@ async function factory (pkgName) {
           returning: false
         }
       ]
+      */
     }
   }
   return DoboKnex
