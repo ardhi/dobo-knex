@@ -31,11 +31,11 @@
     "url": "https://github.com/ardhi/dobo-knex/issues"
   },
   "homepage": "https://github.com/ardhi/dobo-knex#readme",
-  "dependencies": {
-    "knex": "^3.1.0"
-  },
   "devDependencies": {
     "clean-jsdoc-theme": "^4.3.0",
     "jsdoc-plugin-intersection": "^1.0.4"
+  },
+  "dependencies": {
+    "knex": "^3.1.0"
   }
 }
