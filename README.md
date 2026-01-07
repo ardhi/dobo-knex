@@ -4,7 +4,7 @@
 
 > <br />**Attention**: I do NOT accept any pull request at the moment, thanks! ([Why?](wiki/CONTRIBUTING.md))<br /><br />
 
-Knexjs driver for [Dobo](https://github.com/ardhi/dobo)
+Knexjs base driver for [Dobo](https://github.com/ardhi/dobo).
 
 ## Installation
 
