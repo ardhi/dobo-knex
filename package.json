@@ -9,7 +9,10 @@
   },
   "type": "module",
   "bajo": {
-    "type": "plugin"
+    "type": "plugin",
+    "alias": "dbknex",
+    "dependencies": ["dobo"],
+    "bootorder": 60
   },
   "repository": {
     "type": "git",

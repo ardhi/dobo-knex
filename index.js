@@ -1,5 +1,3 @@
-import knexDriverFactory from './lib/knex-driver-factory.js'
-
 /**
  * Plugin factory
  *
@@ -9,21 +7,15 @@ import knexDriverFactory from './lib/knex-driver-factory.js'
 async function factory (pkgName) {
   const me = this
 
-  const KnexDriver = await knexDriverFactory.call(this)
-
   /**
    * DoboKnex class
    *
    * @class
    */
   class DoboKnex extends this.app.baseClass.Base {
-    static alias = 'dbknex'
-    static dependencies = ['dobo']
-
     constructor () {
       super(pkgName, me.app)
       this.config = {}
-      this.baseClass = { KnexDriver }
       /*
       this.drivers = [
         {

@@ -2,8 +2,8 @@ import knex from 'knex'
 
 const propertyKeys = ['specificType', 'precision', 'textType', 'scale', 'unsigned', 'comment', 'autoInc']
 
-async function knexDriverFactory () {
-  const { Driver } = this.app.dobo.baseClass
+async function knexFactory () {
+  const { DoboDriver } = this.app.baseClass
   const { getPluginFile, importPkg } = this.app.bajo
   const { fs } = this.app.lib
   const { omit, has, forOwn, cloneDeep, isEmpty, isArray } = this.app.lib._
@@ -11,11 +11,11 @@ async function knexDriverFactory () {
 
   const mongoKnex = await importPkg('dobo:@tryghost/mongo-knex')
 
-  class KnexDriver extends Driver {
+  class DoboKnexDriver extends DoboDriver {
     static propertyKeys = propertyKeys
 
-    constructor (plugin, options = {}) {
-      super(plugin)
+    constructor (plugin, name, options = {}) {
+      super(plugin, name)
       this.idField = {
         name: 'id',
         type: 'integer',
@@ -293,7 +293,8 @@ async function knexDriverFactory () {
     }
   }
 
-  return KnexDriver
+  this.app.baseClass.DoboKnexDriver = DoboKnexDriver
+  return DoboKnexDriver
 }
 
-export default knexDriverFactory
+export default knexFactory
