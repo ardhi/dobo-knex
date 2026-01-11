@@ -15,7 +15,7 @@ async function knexFactory () {
     static propertyKeys = propertyKeys
 
     constructor (plugin, name, options = {}) {
-      super(plugin, name)
+      super(plugin, name, options)
       this.idField = {
         name: 'id',
         type: 'integer',
@@ -23,7 +23,6 @@ async function knexFactory () {
         autoInc: true,
         index: 'primary'
       }
-      this.options = options
       this.support.truncate = false
       this.support.returning = false
       this.adapter = null
