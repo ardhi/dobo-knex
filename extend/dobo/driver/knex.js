@@ -28,7 +28,7 @@ async function knexFactory () {
       this.adapter = null
     }
 
-    async createClient (connection) {
+    async connect (connection, noRebuild) {
       const dialectFile = getPluginFile(this.dialectFile ?? `${this.app.doboKnex.ns}:node_modules/knex/lib/dialects/${this.dialect}/index.js`)
       if (!fs.existsSync(dialectFile)) this.plugin.fatal('notFound%s%s', this.plugin.t('dialectFile'), dialectFile)
       const dbDriver = (await import(dialectFile)).default
