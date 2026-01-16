@@ -25,6 +25,7 @@ async function knexFactory () {
       }
       this.support.truncate = false
       this.support.returning = false
+      this.support.uniqueIndex = true
       this.adapter = null
     }
 
@@ -81,7 +82,8 @@ async function knexFactory () {
             }
             case 'unique': {
               opts.indexName = index.name
-              table.unique(index.fields, opts)
+              if (this.support.uniqueIndex) table.unique(index.fields, opts)
+              else table.index(index.fields, index.name)
               break
             }
             case 'index': {
