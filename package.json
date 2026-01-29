@@ -1,6 +1,6 @@
 {
   "name": "dobo-knex",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "Knex for Dobo",
   "main": "index.js",
   "scripts": {

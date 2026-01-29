@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-01-29
+
+- [2.3.0] Add ```bulkCreateRecords()```
+
 ## 2026-01-16
 
 - [2.2.1] If native driver doesn't support unique index, it converted to normal index.
