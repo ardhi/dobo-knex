@@ -26,6 +26,7 @@ async function knexFactory () {
       this.support.truncate = false
       this.support.returning = false
       this.support.uniqueIndex = true
+      this.support.transaction = true
       this.adapter = null
     }
 
@@ -41,14 +42,22 @@ async function knexFactory () {
       connection.client = knex(defaultsDeep({ connection: connection.options }, { client: dbDriver }, this.options))
     }
 
-    async modelExists (model, options = {}) {
+    getClient (model, options = {}) {
+      const { get } = this.app.lib._
       const client = model.connection.client
+      const key = 'context.client.config.connName'
+      if (options.trx && get(options, `trx.${key}`) === get(client, key)) return options.trx
+      return client
+    }
+
+    async modelExists (model, options = {}) {
+      const client = this.getClient(model, options)
       const exists = await client.schema.hasTable(model.collName)
       return { data: !!exists }
     }
 
     async buildModel (model, options = {}) {
-      const client = model.connection.client
+      const client = this.getClient(model, options)
       await client.schema.createTable(model.collName, table => {
         for (const p of model.properties) {
           const prop = cloneDeep(p)
@@ -101,26 +110,26 @@ async function knexFactory () {
     }
 
     async clearRecord (model, options = {}) {
-      const client = model.connection.client
+      const client = this.getClient(model, options)
       const op = this.support.truncate ? 'truncate' : 'del'
       await client(model.collName)[op]()
       return { data: true }
     }
 
     async dropModel (model, options = {}) {
-      const client = model.connection.client
+      const client = this.getClient(model, options)
       await client.schema.dropTable(model.collName)
       return { data: true }
     }
 
     async bulkCreateRecords (model, bodies = [], options = {}) {
-      const client = model.connection.client
+      const client = this.getClient(model, options)
       await client(model.collName).insert(bodies)
       return { data: true }
     }
 
     async createRecord (model, body = {}, options = {}) {
-      const client = model.connection.client
+      const client = this.getClient(model, options)
       const result = await client(model.collName).insert(body, this._getReturningFields(model, options))
       if (options.noResult) return
       if (this.support.returning) return { data: result[0] }
@@ -140,7 +149,7 @@ async function knexFactory () {
      */
     async getCreatedRecord (model, body, result, options = {}) {
       const id = body[this.idField.name] ?? result[0]
-      const resp = await this.getRecord(model, id)
+      const resp = await this.getRecord(model, id, options)
       return { data: resp.data }
     }
 
@@ -153,36 +162,36 @@ async function knexFactory () {
      * @returns {Object}
      */
     async getRecord (model, id, options = {}) {
-      const client = model.connection.client
+      const client = this.getClient(model, options)
       const result = await client(model.collName).where('id', id)
       return { data: result[0] }
     }
 
     async updateRecord (model, id, body = {}, options = {}) {
       const oldData = options._data
-      const client = model.connection.client
+      const client = this.getClient(model, options)
       const result = await client(model.collName).where('id', id).update(body, this._getReturningFields(model, options))
       if (options.noResult) return
       if (this.support.returning) return { data: result[0], oldData }
-      const resp = await this.getRecord(model, id)
+      const resp = await this.getRecord(model, id, options)
       return { data: resp.data, oldData }
     }
 
     async removeRecord (model, id, options = {}) {
-      const client = model.connection.client
+      const client = this.getClient(model, options)
       await client(model.collName).where('id', id).del()
       if (options.noResult) return
       return { oldData: options._data }
     }
 
-    async findRecord (model, filter = {}, options = {}, noLimit) {
-      const client = model.connection.client
+    async findRecord (model, filter = {}, options = {}) {
+      const client = this.getClient(model, options)
       const { limit, skip, sort, page } = filter
       let count = 0
       if (options.count) count = (await this.countRecord(model, filter, options)).data
       const { query, match } = filter
       const instance = mongoKnex(client(model.collName), query)
-      if (!noLimit) instance.limit(limit, { skipBinding: true }).offset(skip)
+      if (!options.noLimit) instance.limit(limit, { skipBinding: true }).offset(skip)
       if (sort) {
         const sorts = []
         forOwn(sort, (v, k) => {
@@ -197,18 +206,19 @@ async function knexFactory () {
     }
 
     async findAllRecord (model, filter = {}, options = {}) {
-      return await this.findRecord(model, filter, options, true)
+      options.noLimit = true
+      return await this.findRecord(model, filter, options)
     }
 
     async countRecord (model, filter = {}, options = {}) {
-      const client = model.connection.client
+      const client = this.getClient(model, options)
       const instance = mongoKnex(client(model.collName), filter.query)
       const result = await instance.count('*', { as: 'cnt' })
       return { data: result[0].cnt }
     }
 
     async createAggregate (model, filter = {}, params = {}, options = {}) {
-      const client = model.connection.client
+      const client = this.getClient(model, options)
       const { generateId } = this.app.lib.aneka
       const { limit, skip, sort, page } = filter
       const { query } = filter
@@ -240,7 +250,7 @@ async function knexFactory () {
     }
 
     async createHistogram (model, filter = {}, params, options = {}) {
-      const client = model.connection.client
+      const client = this.getClient(model, options)
       const { generateId } = this.app.lib.aneka
       const { limit, skip, sort, page } = filter
       const { query } = filter
@@ -296,6 +306,15 @@ async function knexFactory () {
       item = item ?? instance.toSQL().toNative()
       let result = (await instance.client.raw(item.sql, item.bindings)) ?? []
       if (isArray(result[0])) result = result[0]
+      return result
+    }
+
+    async transaction (model, handler, ...args) {
+      const client = model.connection.client
+      let result
+      await client.transaction(async trx => {
+        result = await handler.call(model, trx, ...args)
+      })
       return result
     }
   }

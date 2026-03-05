@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-03-05
+
+- [2.4.0] Add transaction support
+
 ## 2026-01-29
 
 - [2.3.0] Add ```bulkCreateRecords()```
