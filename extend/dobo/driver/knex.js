@@ -186,12 +186,15 @@ async function knexFactory () {
 
     async findRecord (model, filter = {}, options = {}) {
       const client = this.getClient(model, options)
+      const { hardLimit } = this.app.dobo.config.default.filter
       const { limit, skip, sort, page } = filter
       let count = 0
       if (options.count) count = (await this.countRecord(model, filter, options)).data
       const { query, match } = filter
       const instance = mongoKnex(client(model.collName), query)
-      if (!options.noLimit) instance.limit(limit, { skipBinding: true }).offset(skip)
+      if (options.noLimit && options.count) {
+        instance.limit(hardLimit, { skipBinding: true }).offset(skip)
+      } else instance.limit(limit, { skipBinding: true }).offset(skip)
       if (sort) {
         const sorts = []
         forOwn(sort, (v, k) => {
@@ -200,8 +203,11 @@ async function knexFactory () {
         instance.orderBy(sorts)
       }
       const data = await instance
-      let result = { data, page, limit, count, pages: Math.ceil(count / limit), filter: { query, match, sort } }
+      let result = { data, page, limit, count, pages: Math.ceil(count / limit), filter: { query, match, sort }, warnings: [] }
       if (!options.count) result = omit(result, ['count', 'pages'])
+      if (options.noLimit && options.count && count > hardLimit) {
+        result.warnings.push(options.req ? options.req.t('hardLimitWarning%s%s', result.data.length, hardLimit) : this.plugin.t('hardLimitWarning%s%s', result.data.length, hardLimit))
+      }
       return result
     }
 

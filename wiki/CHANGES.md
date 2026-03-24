@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-03-25
+
+- [2.4.1] Bug fix in ```findAllRecord()```, now obey ```dobo.hardLimit```
+
 ## 2026-03-05
 
 - [2.4.0] Add transaction support
