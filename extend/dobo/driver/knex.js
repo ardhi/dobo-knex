@@ -185,15 +185,18 @@ async function knexFactory () {
     }
 
     async findRecord (model, filter = {}, options = {}) {
+      const { handleLastPage } = this.app.dobo
       const client = this.getClient(model, options)
-      const { hardLimit } = this.app.dobo.config.default.filter
+      const { hardCap } = this.app.dobo.getDefaultValues(options)
       const { limit, skip, sort, page } = filter
-      let count = 0
-      if (options.count) count = (await this.countRecord(model, filter, options)).data
-      const { query, match } = filter
+      const resp = await model.countRecord(model, filter, { ...options, noCache: true })
+      let count = options.count ? resp : 0
+      const { query } = filter
+      const result = handleLastPage({ count, limit, page }, options)
+      if (result) return result
       const instance = mongoKnex(client(model.collName), query)
       if (options.noLimit && options.count) {
-        instance.limit(hardLimit, { skipBinding: true }).offset(skip)
+        instance.limit(hardCap, { skipBinding: true }).offset(skip)
       } else instance.limit(limit, { skipBinding: true }).offset(skip)
       if (sort) {
         const sorts = []
@@ -203,12 +206,8 @@ async function knexFactory () {
         instance.orderBy(sorts)
       }
       const data = await instance
-      let result = { data, page, limit, count, pages: Math.ceil(count / limit), filter: { query, match, sort }, warnings: [] }
-      if (!options.count) result = omit(result, ['count', 'pages'])
-      if (options.noLimit && options.count && count > hardLimit) {
-        result.warnings.push(options.req ? options.req.t('hardLimitWarning%s%s', result.data.length, hardLimit) : this.plugin.t('hardLimitWarning%s%s', result.data.length, hardLimit))
-      }
-      return result
+      if (options.noLimit && options.count && count > hardCap) count = hardCap
+      return { data, count }
     }
 
     async findAllRecord (model, filter = {}, options = {}) {
@@ -219,8 +218,8 @@ async function knexFactory () {
     async countRecord (model, filter = {}, options = {}) {
       const client = this.getClient(model, options)
       const instance = mongoKnex(client(model.collName), filter.query)
-      const result = await instance.count('*', { as: 'cnt' })
-      return { data: result[0].cnt }
+      const resp = await instance.count('*', { as: 'cnt' })
+      return { data: resp[0].cnt }
     }
 
     async createAggregate (model, filter = {}, params = {}, options = {}) {

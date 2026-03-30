@@ -1,8 +1,12 @@
 # Changes
 
+## 2026-03-30
+
+- [2.5.0] Add full ```hardCap``` support
+
 ## 2026-03-25
 
-- [2.4.1] Bug fix in ```findAllRecord()```, now obey ```dobo.hardLimit```
+- [2.4.1] Bug fix in ```findAllRecord()```, now obey ```dobo.hardCap```
 
 ## 2026-03-05
 
