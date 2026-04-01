@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-04-01
+
+- [2.5.1] Bug fix in ```findRecord()```
+
 ## 2026-03-30
 
 - [2.5.0] Add full ```hardCap``` support

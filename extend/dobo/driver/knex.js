@@ -189,7 +189,7 @@ async function knexFactory () {
       const client = this.getClient(model, options)
       const { hardCap } = this.app.dobo.getDefaultValues(options)
       const { limit, skip, sort, page } = filter
-      const resp = await model.countRecord(model, filter, { ...options, noCache: true })
+      const resp = await model.countRecord(filter, { ...options, noCache: true })
       let count = options.count ? resp : 0
       const { query } = filter
       const result = handleLastPage({ count, limit, page }, options)
