@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-04-02
+
+- [2.5.2] Bug fix in ```findRecord()``` on getting records count
+
 ## 2026-04-01
 
 - [2.5.1] Bug fix in ```findRecord()```
