@@ -192,7 +192,7 @@ async function knexFactory () {
       const resp = await model.countRecord(filter, { ...options, noCache: true, dataOnly: false })
       let count = options.count ? resp.data : 0
       const { query } = filter
-      const result = handleLastPage({ count, limit, page }, options)
+      const result = handleLastPage({ count: resp.orgCount, limit, page }, options)
       if (result) return result
       const instance = mongoKnex(client(model.collName), query)
       if (options.noLimit && options.count) {
@@ -207,7 +207,7 @@ async function knexFactory () {
       }
       const data = await instance
       if (options.noLimit && options.count && count > hardCap) count = hardCap
-      return { data, count, warnings: resp.warnings }
+      return { data, count, warnings: resp.warnings, hardCapped: resp.hardCapped }
     }
 
     async findAllRecord (model, filter = {}, options = {}) {

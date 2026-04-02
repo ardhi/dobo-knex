@@ -3,6 +3,7 @@
 ## 2026-04-02
 
 - [2.5.2] Bug fix in ```findRecord()``` on getting records count
+- [2.5.3] Bug fix in ```handleLastPage()```
 
 ## 2026-04-01
 
