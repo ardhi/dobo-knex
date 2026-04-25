@@ -59,7 +59,7 @@ async function knexFactory () {
     async buildModel (model, options = {}) {
       const client = this.getClient(model, options)
       await client.schema.createTable(model.collName, table => {
-        for (const p of model.properties) {
+        for (const p of model.getProperties({ noVirtual: true })) {
           const prop = cloneDeep(p)
           if (prop.specificType) {
             table.specificType(prop.name, prop.specificType)
@@ -80,7 +80,7 @@ async function knexFactory () {
           if (prop.comment) col.comment(prop.comment)
           if (options.onColumn) options.onColumn.call(this, model, table, col)
         }
-        for (const index of model.indexes ?? []) {
+        for (const index of model.getIndexes()) {
           let opts = omit(index, ['name', 'type', 'fields'])
           switch (index.type) {
             case 'primary': {

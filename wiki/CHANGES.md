@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-04-25
+
+- [2.5.4] Bug fix in ```driver.buildModel()```
+
 ## 2026-04-02
 
 - [2.5.2] Bug fix in ```findRecord()``` on getting records count
