@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-05-11
+
+- [2.6.0] Updates to match ```dobo@2.23.0``` specs
+
 ## 2026-04-25
 
 - [2.5.4] Bug fix in ```driver.buildModel()```
@@ -27,7 +31,7 @@
 
 ## 2026-01-29
 
-- [2.3.0] Add ```bulkCreateRecords()```
+- [2.3.0] Add ```bulkCreateRecord()```
 
 ## 2026-01-16
 

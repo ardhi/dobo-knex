@@ -122,7 +122,7 @@ async function knexFactory () {
       return { data: true }
     }
 
-    async bulkCreateRecords (model, bodies = [], options = {}) {
+    async bulkCreateRecord (model, bodies = [], options = {}) {
       const client = this.getClient(model, options)
       await client(model.collName).insert(bodies)
       return { data: true }
