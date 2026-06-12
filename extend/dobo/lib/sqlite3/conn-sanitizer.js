@@ -1,7 +1,6 @@
 import path from 'path'
 
 async function connSanitizer (item) {
-  const { getPluginDataDir } = this.app.bajo
   const { fs } = this.app.lib
   if (!item.connection) this.fatal('keyIsRequired%s%s', 'connection', item.name, { payload: item })
   const { isEmpty, pick } = this.app.lib._
@@ -9,7 +8,7 @@ async function connSanitizer (item) {
   if (!item.connection.filename) this.fatal('keyIsRequired%s%s', 'filename', item.name, { payload: item })
   let file = item.connection.filename
   if (file.indexOf('/') === -1) {
-    file = `${getPluginDataDir('dobo')}/db/${file}`
+    file = `${this.app.getPluginDataDir('dobo')}/db/${file}`
     const ext = path.extname(file)
     if (isEmpty(ext)) file += '.sqlite3'
     fs.ensureDirSync(path.dirname(file))
