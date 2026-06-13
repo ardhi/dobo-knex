@@ -195,9 +195,7 @@ async function knexFactory () {
       const result = handleLastPage({ count: resp.orgCount, limit, page }, options)
       if (result) return result
       const instance = mongoKnex(client(model.collName), query)
-      if (options.count) {
-        instance.limit(hardCap, { skipBinding: true }).offset(skip)
-      } else instance.limit(limit, { skipBinding: true }).offset(skip)
+      instance.limit(limit, { skipBinding: true }).offset(skip)
       if (sort) {
         const sorts = []
         forOwn(sort, (v, k) => {

@@ -2,6 +2,10 @@
 
 ## 2026-06-12
 
+- [2.7.2] Bug fix in ```findRecord()```
+
+## 2026-06-12
+
 - [2.7.1] Bug fix in ```findAllRecord()```
 
 ## 2026-06-12
