@@ -189,6 +189,7 @@ async function knexFactory () {
       const client = this.getClient(model, options)
       const { hardCap } = this.app.dobo.getDefaultValues(options)
       const { limit, skip, sort, page } = filter
+      // console.log(model.name, filter)
       const resp = await model.countRecord(filter, { ...options, noCache: true, dataOnly: false })
       let count = options.count ? resp.data : 0
       const { query } = filter
