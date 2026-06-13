@@ -2,6 +2,10 @@
 
 ## 2026-06-12
 
+- [2.7.1] Bug fix in ```findAllRecord()```
+
+## 2026-06-12
+
 - [2.7.0] Necessary updates to ```bajo@2.18.0``` specs
 
 ## 2026-05-11

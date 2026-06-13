@@ -195,7 +195,7 @@ async function knexFactory () {
       const result = handleLastPage({ count: resp.orgCount, limit, page }, options)
       if (result) return result
       const instance = mongoKnex(client(model.collName), query)
-      if (options.noLimit && options.count) {
+      if (options.count) {
         instance.limit(hardCap, { skipBinding: true }).offset(skip)
       } else instance.limit(limit, { skipBinding: true }).offset(skip)
       if (sort) {
@@ -206,13 +206,28 @@ async function knexFactory () {
         instance.orderBy(sorts)
       }
       const data = await instance
-      if (options.noLimit && options.count && count > hardCap) count = hardCap
+      if (options.count && count > hardCap) count = hardCap
       return { data, count, warnings: resp.warnings, hardCapped: resp.hardCapped }
     }
 
     async findAllRecord (model, filter = {}, options = {}) {
-      options.noLimit = true
-      return await this.findRecord(model, filter, options)
+      delete filter.skip
+      delete filter.page
+      const { hardCap } = this.app.dobo.getDefaultValues(options)
+      filter.limit = hardCap
+      const client = this.getClient(model, options)
+      const { sort, query } = filter
+      const instance = mongoKnex(client(model.collName), query)
+      instance.limit(filter.limit, { skipBinding: true })
+      if (sort) {
+        const sorts = []
+        forOwn(sort, (v, k) => {
+          sorts.push({ column: k, order: v < 0 ? 'desc' : 'asc' })
+        })
+        instance.orderBy(sorts)
+      }
+      const data = await instance
+      return { data, hardCapped: true }
     }
 
     async countRecord (model, filter = {}, options = {}) {
@@ -229,7 +244,7 @@ async function knexFactory () {
       const { query } = filter
       const { group, aggregates = [], field } = params
       const instance = mongoKnex(client(model.collName), query)
-      if (!options.noLimit) instance.limit(limit, { skipBinding: true }).offset(skip)
+      instance.limit(limit, { skipBinding: true }).offset(skip)
       instance.select(group).groupBy(group)
       if (sort) {
         const f = Object.keys(sort)[0]
@@ -261,7 +276,7 @@ async function knexFactory () {
       const { query } = filter
       const { group, type, field, aggregates = [] } = params
       const instance = mongoKnex(client(model.collName), query)
-      if (!options.noLimit) instance.limit(limit, { skipBinding: true }).offset(skip)
+      instance.limit(limit, { skipBinding: true }).offset(skip)
       if (sort) {
         /*
         const f = Object.keys(sort)[0]
