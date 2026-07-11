@@ -4,7 +4,7 @@
 
 > <br />**Attention**: I do NOT accept any pull request at the moment, thanks! ([Why?](wiki/CONTRIBUTING.md))<br /><br />
 
-Knexjs base driver for [Dobo](https://github.com/ardhi/dobo).
+Knexjs base adapter for [Dobo](https://github.com/ardhi/dobo).
 
 ## Installation
 
@@ -19,7 +19,7 @@ Next, open the file located at ```{dataDir}/config/.plugins``` and add ```dobo``
 ## Documentations
 
 - [Config Object](wiki/CONFIG.md)
-- [Supported Drivers](wiki/SUPPORTED-DRIVERS.md)
+- [Supported Adapters](wiki/SUPPORTED-ADAPTERS.md)
 - [API](https://ardhi.github.io/dobo-knex)
 - [Contributing](wiki/CONTRIBUTING.md)
 

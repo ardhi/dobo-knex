@@ -1,9 +1,56 @@
 import knex from 'knex'
 
+/**
+ * @external DoboModel
+ * @see {@link https://ardhi.github.io/dobo/DoboModel|DoboModel}
+ */
+
+/**
+ * @external TOptions
+ * @see {@link https://ardhi.github.io/dobo/DoboModel.html#.TOptions|DoboModel.TOptions}
+ */
+
+/**
+ * @external TAdapterIdField
+ * @see {@link https://ardhi.github.io/dobo/DoboAdapter.html#.TAdapterIdField|DoboAdapter.TAdapterIdField}
+ */
+
+/**
+ * @external TAdapterResult
+ * @see {@link https://ardhi.github.io/dobo/DoboAdapter.html#.TAdapterResult|DoboAdapter.TAdapterResult}
+ */
+
+/**
+ * @external TConnectionOptions
+ * @see {@link https://ardhi.github.io/dobo/DoboConnection.html#.TConnectionOptions|DoboConnection.TConnectionOptions}
+ */
+
+/**
+ * @typedef {Object & external:TConnectionOptions} TConnectionOptions
+ * @memberof DoboKnexAdapter
+ * @property {string} [host] - The database host
+ * @property {number} [port] - The database port
+ * @property {string} [user] - The database user
+ * @property {string} [password] - The database password
+ * @property {string} [database] - The database name
+ */
+
+/**
+ * @typedef TPropertyKeys
+ * @type {Array<string>}
+ * @property {string} 0 specificType
+ * @property {string} 1 precision
+ * @property {string} 2 textType
+ * @property {string} 3 scale
+ * @property {string} 4 unsigned
+ * @property {string} 5 comment
+ * @property {string} 6 autoInc
+ * @memberof DoboKnexAdapter
+ */
 const propertyKeys = ['specificType', 'precision', 'textType', 'scale', 'unsigned', 'comment', 'autoInc']
 
 async function knexFactory () {
-  const { DoboDriver } = this.app.baseClass
+  const { DoboAdapter } = this.app.baseClass
   const { importPkg } = this.app.bajo
   const { fs } = this.app.lib
   const { omit, has, forOwn, cloneDeep, isEmpty, isArray } = this.app.lib._
@@ -11,11 +58,32 @@ async function knexFactory () {
 
   const mongoKnex = await importPkg('dobo:@tryghost/mongo-knex')
 
-  class DoboKnexDriver extends DoboDriver {
+  /**
+   * DoboKnexAdapter class definition.
+   *
+   * @class
+   */
+  class DoboKnexAdapter extends DoboAdapter {
+    /**
+     * Allowed property keys for model properties.
+     * @type {TPropertyKeys}
+     */
     static propertyKeys = propertyKeys
 
+    /**
+     * Constructor
+     */
     constructor (plugin, name, options = {}) {
       super(plugin, name, options)
+      /**
+       * Default ID field configuration for models.
+       * @type {external:TAdapterIdField}
+       * @property {string} [name='id'] - The name of the ID field
+       * @property {string} [type='integer'] - The data type of the ID field
+       * @property {boolean} [required=true] - Whether the ID field is required
+       * @property {boolean} [autoInc=true] - Whether the ID field is auto-incremented
+       * @property {string} [index='primary'] - The index type for the ID field
+       */
       this.idField = {
         name: 'id',
         type: 'integer',
@@ -23,25 +91,66 @@ async function knexFactory () {
         autoInc: true,
         index: 'primary'
       }
+
+      /**
+       * Override the default behavior of truncating tables on clear operations.
+       * @type {boolean}
+       * @default false
+       */
       this.support.truncate = false
+
+      /**
+       * Override the default behavior of returning inserted rows on insert queries.
+       * @type {boolean}
+       * @default false
+       */
       this.support.returning = false
+
+      /**
+       * Override the default behavior of creating unique indexes.
+       * @type {boolean}
+       * @default true
+       */
       this.support.uniqueIndex = true
+
+      /**
+       * Override the default behavior of supporting transactions.
+       * @type {boolean}
+       * @default true
+       */
       this.support.transaction = true
+
+      /**
+       * The default database engine to use.
+       * @type {string|null}
+       * @default null
+       */
       this.adapter = null
     }
 
-    async connect (connection, noRebuild) {
+    /**
+     * Connect to the database using the provided connection.
+     * @param {Object} [connection={}] - The database connection object
+     * @param {boolean} [noRebuild=false] - Whether to skip rebuilding the connection
+     */
+    async connect (connection = {}, noRebuild = false) {
       const dialectFile = this.app.getPluginFile(this.dialectFile ?? `${this.app.doboKnex.ns}:node_modules/knex/lib/dialects/${this.dialect}/index.js`)
       if (!fs.existsSync(dialectFile)) this.plugin.fatal('notFound%s%s', this.plugin.t('dialectFile'), dialectFile)
-      const dbDriver = (await import(dialectFile)).default
+      const client = (await import(dialectFile)).default
       const adapter = this.adapter ?? this.dialect
       let dbAdapter = await importPkg(`main:${adapter}`)
       if (!dbAdapter) dbAdapter = await importPkg(`${this.plugin.ns}:${adapter}`)
       if (!dbAdapter) throw this.plugin.fatal('dbAdapterNotInstalled%s', dbAdapter)
-      dbDriver.prototype._driver = () => dbAdapter
-      connection.client = knex(defaultsDeep({ connection: connection.options }, { client: dbDriver }, this.options))
+      client.prototype._driver = () => dbAdapter
+      connection.client = knex(defaultsDeep({ connection: connection.options }, { client }, this.options))
     }
 
+    /**
+     * Get the database client for the given model and options.
+     * @param {external:DoboModel} model - The model instance
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Object} The database client
+     */
     getClient (model, options = {}) {
       const { get } = this.app.lib._
       const client = model.connection.client
@@ -50,12 +159,25 @@ async function knexFactory () {
       return client
     }
 
+    /**
+     * Check if the model's table exists in the database.
+     * @async
+     * @param {external:DoboModel} model - The model instance
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Promise<external:TAdapterResult>} An object containing the existence status of the table
+     */
     async modelExists (model, options = {}) {
       const client = this.getClient(model, options)
       const exists = await client.schema.hasTable(model.collName)
       return { data: !!exists }
     }
 
+    /**
+     * Build the model's table in the database based on its properties and indexes.
+     * @param {external:DoboModel} model - The model instance
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Promise<external:TAdapterResult>} An object containing the result of the build operation
+     */
     async buildModel (model, options = {}) {
       const client = this.getClient(model, options)
       await client.schema.createTable(model.collName, table => {
@@ -109,6 +231,12 @@ async function knexFactory () {
       return { data: true }
     }
 
+    /**
+     * Clear all records from the model's table in the database.
+     * @param {external:DoboModel} model - The model instance
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Promise<external:TAdapterResult>} An object containing the result of the clear operation
+     */
     async clearRecord (model, options = {}) {
       const client = this.getClient(model, options)
       const op = this.support.truncate ? 'truncate' : 'del'
@@ -141,11 +269,11 @@ async function knexFactory () {
      * should extend this method
      *
      * @async
-     * @param {Object} model
-     * @param {Object} body
-     * @param {Object} result
-     * @param {Object} [options]
-     * @returns {Object}
+     * @param {external:DoboModel} model - The model instance
+     * @param {Object} body - The data used to create the record
+     * @param {Object} result - The result returned from the database
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Promise<external:TAdapterResult>} An object containing the newly created record
      */
     async getCreatedRecord (model, body, result, options = {}) {
       const id = body[this.idField.name] ?? result[0]
@@ -154,12 +282,12 @@ async function knexFactory () {
     }
 
     /**
-     * Get record
-     *
-     * @param {Object} model
-     * @param {number|string} id
-     * @param {Object} [options]
-     * @returns {Object}
+     * Get a record from the model's table in the database by its ID.
+     * @async
+     * @param {external:DoboModel} model - The model instance
+     * @param {number|string} id - The ID of the record to retrieve
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Promise<external:TAdapterResult>} An object containing the retrieved record
      */
     async getRecord (model, id, options = {}) {
       const client = this.getClient(model, options)
@@ -167,6 +295,15 @@ async function knexFactory () {
       return { data: result[0] }
     }
 
+    /**
+     * Update a record in the model's table in the database by its ID.
+     * @async
+     * @param {external:DoboModel} model - The model instance
+     * @param {number|string} id - The ID of the record to update
+     * @param {Object} body - The data to update the record with
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Promise<external:TAdapterResult>} An object containing the updated record and the old data
+     */
     async updateRecord (model, id, body = {}, options = {}) {
       const oldData = options._data
       const client = this.getClient(model, options)
@@ -177,6 +314,14 @@ async function knexFactory () {
       return { data: resp.data, oldData }
     }
 
+    /**
+     * Remove a record from the model's table in the database by its ID.
+     * @async
+     * @param {external:DoboModel} model - The model instance
+     * @param {number|string} id - The ID of the record to remove
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Promise<external:TAdapterResult>} An object containing the old data
+     */
     async removeRecord (model, id, options = {}) {
       const client = this.getClient(model, options)
       await client(model.collName).where('id', id).del()
@@ -184,6 +329,14 @@ async function knexFactory () {
       return { oldData: options._data }
     }
 
+    /**
+     * Find record(s) in the model's table in the database matching the filter.
+     * @async
+     * @param {external:DoboModel} model - The model instance
+     * @param {Object} filter - The filter criteria
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Promise<external:TAdapterResult>} An object containing the found record(s)
+     */
     async findRecord (model, filter = {}, options = {}) {
       const { handleLastPage } = this.app.dobo
       const client = this.getClient(model, options)
@@ -209,6 +362,14 @@ async function knexFactory () {
       return { data, count, warnings: resp.warnings, hardCapped: resp.hardCapped }
     }
 
+    /**
+     * Find all records in the model's table in the database matching the filter.
+     * @async
+     * @param {external:DoboModel} model - The model instance
+     * @param {Object} filter - The filter criteria
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Promise<external:TAdapterResult>} An object containing the found record(s)
+     */
     async findAllRecord (model, filter = {}, options = {}) {
       delete filter.skip
       delete filter.page
@@ -229,6 +390,14 @@ async function knexFactory () {
       return { data, hardCapped: true }
     }
 
+    /**
+     * Count records in the model's table in the database matching the filter.
+     * @async
+     * @param {external:DoboModel} model - The model instance
+     * @param {Object} filter - The filter criteria
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Promise<external:TAdapterResult>} An object containing the count of matching records
+     */
     async countRecord (model, filter = {}, options = {}) {
       const client = this.getClient(model, options)
       const instance = mongoKnex(client(model.collName), filter.query)
@@ -236,6 +405,15 @@ async function knexFactory () {
       return { data: resp[0].cnt }
     }
 
+    /**
+     * Create an aggregate query on the model's table in the database.
+     * @async
+     * @param {external:DoboModel} model - The model instance
+     * @param {Object} filter - The filter criteria
+     * @param {Object} params - The aggregate parameters
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Promise<external:TAdapterResult>} An object containing the aggregate result
+     */
     async createAggregate (model, filter = {}, params = {}, options = {}) {
       const client = this.getClient(model, options)
       const { generateId } = this.app.lib.aneka
@@ -268,6 +446,15 @@ async function knexFactory () {
       return { data, page, limit, group, field }
     }
 
+    /**
+     * Create a histogram query on the model's table in the database.
+     * @async
+     * @param {external:DoboModel} model - The model instance
+     * @param {Object} filter - The filter criteria
+     * @param {Object} params - The histogram parameters
+     * @param {external:TOptions} [options={}] - Additional options
+     * @returns {Promise<external:TAdapterResult>} An object containing the histogram result
+     */
     async createHistogram (model, filter = {}, params, options = {}) {
       const client = this.getClient(model, options)
       const { generateId } = this.app.lib.aneka
@@ -294,7 +481,18 @@ async function knexFactory () {
       return { data, page, limit, group, field, type, aggregates }
     }
 
-    _reformHistogram ({ type, item, group, aggregates, field }) {
+    /**
+     * Reform the histogram query based on the type and aggregates.
+     * @param {Object} options - The options for reforming the histogram
+     * @param {string} options.type - The type of histogram (daily, monthly, yearly)
+     * @param {Object} options.item - The SQL query item
+     * @param {string} options.group - The group field
+     * @param {Array} options.aggregates - The aggregate functions
+     * @param {string} options.field - The field to aggregate
+     * @private
+     */
+    _reformHistogram (options = {}) {
+      const { type, item, group, aggregates, field } = options
       const aggs = []
       for (const agg of aggregates) {
         aggs.push(`${agg}(${agg === 'count' ? '*' : field}) as ${agg}`)
@@ -321,6 +519,13 @@ async function knexFactory () {
       }
     }
 
+    /**
+     * Get the raw result from the database for the given query instance and item.
+     * @async
+     * @param {Object} instance - The query instance
+     * @param {Object} item - The SQL query item
+     * @returns {Promise<Array>} The raw result from the database
+     */
     async getRawResult (instance, item) {
       item = item ?? instance.toSQL().toNative()
       let result = (await instance.client.raw(item.sql, item.bindings)) ?? []
@@ -328,6 +533,14 @@ async function knexFactory () {
       return result
     }
 
+    /**
+     * Execute a transaction on the model's database connection.
+     * @async
+     * @param {external:DoboModel} model - The model instance
+     * @param {Function} handler - The transaction handler function
+     * @param  {...any} args - Additional arguments to pass to the handler
+     * @returns {Promise<*>} The result of the transaction
+     */
     async transaction (model, handler, ...args) {
       const client = model.connection.client
       let result
@@ -338,8 +551,8 @@ async function knexFactory () {
     }
   }
 
-  this.app.baseClass.DoboKnexDriver = DoboKnexDriver
-  return DoboKnexDriver
+  this.app.baseClass.DoboKnexAdapter = DoboKnexAdapter
+  return DoboKnexAdapter
 }
 
 export default knexFactory

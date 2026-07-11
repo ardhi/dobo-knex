@@ -9,9 +9,9 @@
 | &nbsp;&nbsp;&nbsp;&nbsp;```maxMatches``` | ```number``` | 1000 ||
 | &nbsp;&nbsp;&nbsp;&nbsp;```...``` ||| See manticoresearch options |
 
-## Driver Specific Connection
+## Adapter Specific Connection
 
-These driver specific connection objects should be used as your **Dobo connection** object's array written in your ```{dataDir}/config/dobo.json```, NOT in ```{dataDir}/config/doboKnex.json```.
+These adapter specific connection objects should be used as your **Dobo connection** object's array written in your ```{dataDir}/config/dobo.json```, NOT in ```{dataDir}/config/doboKnex.json```.
 
 See Dobo's Config Object for more info on this topic.
 
@@ -20,7 +20,7 @@ See Dobo's Config Object for more info on this topic.
 | Key Name | Type | Default | Description |
 | ------- | ---- | ----- | ----------- |
 | ```name``` | ```string``` | ```default``` | Connection name |
-| ```type``` | ```string``` || Connection's driver type. See below |
+| ```type``` | ```string``` || Connection's adapter type. See below |
 | ```connection``` | ```object``` || Connection details |
 | &nbsp;&nbsp;&nbsp;&nbsp;```host``` | ```string``` | ```127.0.0.1``` | Hostname/ip to connect to |
 | &nbsp;&nbsp;&nbsp;&nbsp;```port``` | ```number``` || Defaults to DB's default port |
@@ -49,19 +49,19 @@ Directory tokens are supported, it will be replaced by its respected values if a
 - ```{dataDir}```
 - ```{tmp-dir}```
 
-### Driver Types
+### Adapter Types
 
 Very similar to ```client``` option Knexjs's term, it should be one of:
 
-- ```dbknex:better-sqlite3```, driver: better-sqlite3
-- ```dbknex:cockcrouchdb```, driver: pg
-- ```dbknex:mssql```, driver: tedious
-- ```dbknex:mysql```, driver: mysql
-- ```dbknex:mysql2```, driver: mysql2
-- ```dbknex:oracle```, driver: oracle
-- ```dbknex:oracledb```, driver: oracledb
-- ```dbknex:pg-native```, driver: pg-native
-- ```dbknex:postgres```, driver: pg
-- ```dbknex:redshift```, driver: pg
-- ```dbknex:sqlite3```, driver: sqlite3
-- ```dbknex:manticoresearch```, driver: mysql
+- ```dbknex:better-sqlite3```, adapter: better-sqlite3
+- ```dbknex:cockcrouchdb```, adapter: pg
+- ```dbknex:mssql```, adapter: tedious
+- ```dbknex:mysql```, adapter: mysql
+- ```dbknex:mysql2```, adapter: mysql2
+- ```dbknex:oracle```, adapter: oracle
+- ```dbknex:oracledb```, adapter: oracledb
+- ```dbknex:pg-native```, adapter: pg-native
+- ```dbknex:postgres```, adapter: pg
+- ```dbknex:redshift```, adapter: pg
+- ```dbknex:sqlite3```, adapter: sqlite3
+- ```dbknex:manticoresearch```, adapter: mysql

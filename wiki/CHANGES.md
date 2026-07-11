@@ -18,7 +18,7 @@
 
 ## 2026-04-25
 
-- [2.5.4] Bug fix in ```driver.buildModel()```
+- [2.5.4] Bug fix in ```adapter.buildModel()```
 
 ## 2026-04-02
 
@@ -47,7 +47,7 @@
 
 ## 2026-01-16
 
-- [2.2.1] If native driver doesn't support unique index, it converted to normal index.
+- [2.2.1] If native adapter doesn't support unique index, it converted to normal index.
 
 ## 2025-12-22
 

@@ -23,7 +23,7 @@
     "sql",
     "dobo",
     "db",
-    "driver",
+    "adapter",
     "bajo",
     "framework",
     "modular"
