@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-07-12
+
+- [2.8.0] Update documentations
+
 ## 2026-06-12
 
 - [2.7.2] Bug fix in ```findRecord()```
