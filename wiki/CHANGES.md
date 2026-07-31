@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-07-31
+
+- [2.9.0] Add test suite
+
 ## 2026-07-12
 
 - [2.8.0] Update documentations
