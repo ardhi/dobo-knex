@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-08-03
+
+- [2.9.1] Bug fix in `findRecord()`
+
 ## 2026-07-31
 
 - [2.9.0] Add test suite
