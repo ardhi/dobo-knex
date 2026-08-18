@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-08-18
+
+- [2.10.0] Update things to match `dobo@2.38.0`
+
 ## 2026-08-03
 
 - [2.9.1] Bug fix in `findRecord()`

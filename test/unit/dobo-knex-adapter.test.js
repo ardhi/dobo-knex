@@ -113,7 +113,7 @@ describe('dobo-knex adapter (unit)', () => {
 
   it('creates aggregates and histograms and can reform/raw query results', async () => {
     client._state.tables.set('orders', [{ id: 1, title: 'A' }, { id: 2, title: 'B' }])
-    const agg = await adapter.createAggregate(model, { query: {}, limit: 10, skip: 0, page: 1 }, { group: 'title', field: 'score', aggregates: ['count'] }, {})
+    const agg = await adapter.aggregate(model, { query: {}, limit: 10, skip: 0, page: 1 }, { group: 'title', field: 'score', aggregates: ['count'] }, {})
     expect(agg.group).to.equal('title')
     expect(agg.data[0].id).to.match(/^id-/)
 
@@ -124,7 +124,7 @@ describe('dobo-knex adapter (unit)', () => {
     const raw = await adapter.getRawResult({ client, toSQL: () => ({ toNative: () => ({ sql: 'select 1', bindings: [] }) }) })
     expect(raw[0].count).to.equal(1)
 
-    const hist = await adapter.createHistogram(model, { query: {}, limit: 10, skip: 0, page: 1 }, { type: 'yearly', group: 'createdAt', field: 'score', aggregates: ['count'] }, {})
+    const hist = await adapter.histogram(model, { query: {}, limit: 10, skip: 0, page: 1 }, { type: 'yearly', group: 'createdAt', field: 'score', aggregates: ['count'] }, {})
     expect(hist.type).to.equal('yearly')
     expect(hist.data[0].id).to.match(/^id-/)
   })

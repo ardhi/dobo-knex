@@ -414,7 +414,7 @@ async function knexFactory () {
      * @param {external:TOptions} [options={}] - Additional options
      * @returns {Promise<external:TAdapterResult>} An object containing the aggregate result
      */
-    async createAggregate (model, filter = {}, params = {}, options = {}) {
+    async aggregate (model, filter = {}, params = {}, options = {}) {
       const client = this.getClient(model, options)
       const { generateId } = this.app.lib.aneka
       const { limit, skip, sort, page } = filter
@@ -455,7 +455,7 @@ async function knexFactory () {
      * @param {external:TOptions} [options={}] - Additional options
      * @returns {Promise<external:TAdapterResult>} An object containing the histogram result
      */
-    async createHistogram (model, filter = {}, params, options = {}) {
+    async histogram (model, filter = {}, params, options = {}) {
       const client = this.getClient(model, options)
       const { generateId } = this.app.lib.aneka
       const { limit, skip, sort, page } = filter
