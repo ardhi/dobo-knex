@@ -52,7 +52,6 @@ const propertyKeys = ['specificType', 'precision', 'textType', 'scale', 'unsigne
 async function knexFactory () {
   const { DoboAdapter } = this.app.baseClass
   const { importPkg } = this.app.bajo
-  const { fs } = this.app.lib
   const { omit, has, forOwn, cloneDeep, isEmpty, isArray } = this.app.lib._
   const { defaultsDeep } = this.app.lib.aneka
 
@@ -135,8 +134,7 @@ async function knexFactory () {
      */
     async connect (connection = {}, noRebuild = false) {
       const dialectFile = this.app.getPluginFile(this.dialectFile ?? `${this.app.doboKnex.ns}:node_modules/knex/lib/dialects/${this.dialect}/index.js`)
-      if (!fs.existsSync(dialectFile)) this.plugin.fatal('notFound%s%s', this.plugin.t('dialectFile'), dialectFile)
-      const client = (await import(dialectFile)).default
+      const client = await this.app.bajo.importModule(dialectFile)
       const adapter = this.adapter ?? this.dialect
       let dbAdapter = await importPkg(`main:${adapter}`)
       if (!dbAdapter) dbAdapter = await importPkg(`${this.plugin.ns}:${adapter}`)

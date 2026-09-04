@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-09-04
+
+- [2.10.1] Bug fix in `connect()`, now use `app.importModule()`
+
 ## 2026-08-18
 
 - [2.10.0] Update things to match `dobo@2.38.0`
