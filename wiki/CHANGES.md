@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-10-29
+
+- [2.10.2] Bug fix in `aggregate()`
+
 ## 2026-09-04
 
 - [2.10.1] Bug fix in `connect()`, now use `app.importModule()`

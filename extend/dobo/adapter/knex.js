@@ -426,8 +426,7 @@ async function knexFactory () {
         let d = sort[f]
         d = d <= 0 ? 'desc' : 'asc'
         instance.orderBy(group, d)
-      }
-      instance.orderBy(group)
+      } else instance.orderBy(group)
       for (const a of aggregates) {
         instance[a](field, { as: a })
       }
