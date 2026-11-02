@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-11-02
+
+- [2.10.3] Bug fix in `knex.js`
+
 ## 2026-10-29
 
 - [2.10.2] Bug fix in `aggregate()`

@@ -455,21 +455,13 @@ async function knexFactory () {
     async histogram (model, filter = {}, params, options = {}) {
       const client = this.getClient(model, options)
       const { generateId } = this.app.lib.aneka
-      const { limit, skip, sort, page } = filter
+      const { limit, skip, page } = filter
       const { query } = filter
       const { group, type, field, aggregates = [] } = params
       const instance = mongoKnex(client(model.collName), query)
       instance.limit(limit, { skipBinding: true }).offset(skip)
-      if (sort) {
-        /*
-        const f = Object.keys(sort)[0]
-        let d = sort[f]
-        d = d <= 0 ? 'desc' : 'asc'
-        instance.orderBy(f, d)
-        */
-      }
       const item = instance.toSQL().toNative()
-      this._reformHistogram({ item, type, group, aggregates, field })
+      this._reformHistogram({ item, type, group, aggregates, field, filter })
       const result = await this.getRawResult(instance, item)
       const data = (result ?? []).map(d => {
         d[this.idField.name] = generateId()
@@ -489,7 +481,14 @@ async function knexFactory () {
      * @private
      */
     _reformHistogram (options = {}) {
-      const { type, item, group, aggregates, field } = options
+      const { type, item, group, aggregates, field, filter } = options
+      const { sort } = filter
+      let sortDir = ''
+      if (sort) {
+        const f = Object.keys(sort)[0]
+        const d = sort[f]
+        sortDir = d <= 0 ? 'desc' : 'asc'
+      }
       const aggs = []
       for (const agg of aggregates) {
         aggs.push(`${agg}(${agg === 'count' ? '*' : field}) as ${agg}`)
@@ -498,19 +497,19 @@ async function knexFactory () {
         case 'daily': {
           item.sql = item.sql.replace('*', `date_format(${group}, '%Y-%m-%e') as date, ${aggs.join(', ')}`)
           // item.sql = item.sql.replace('limit ', `group by year(${group}), month(${group}), dayofmonth(${group}) limit `)
-          item.sql = item.sql.replace('limit ', 'group by date limit ')
+          item.sql = item.sql.replace('limit ', `group by date order by date ${sortDir} limit `)
           break
         }
         case 'monthly': {
           item.sql = item.sql.replace('*', `date_format(${group}, '%Y-%m') as month, ${aggs.join(', ')}`)
           // item.sql = item.sql.replace('limit ', `group by year(${group}), month(${group}) limit `)
-          item.sql = item.sql.replace('limit ', 'group by month limit ')
+          item.sql = item.sql.replace('limit ', `group by month order by month ${sortDir} limit `)
           break
         }
         case 'yearly': {
           item.sql = item.sql.replace('*', `year(${group}) as year, ${aggs.join(', ')}`)
           // item.sql = item.sql.replace('limit ', `group by year(${group}) limit `)
-          item.sql = item.sql.replace('limit ', 'group by year limit ')
+          item.sql = item.sql.replace('limit ', `group by year order by year ${sortDir} limit `)
           break
         }
       }
